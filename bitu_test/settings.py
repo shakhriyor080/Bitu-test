@@ -1,18 +1,18 @@
 import os
 from pathlib import Path
-
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-
-SECRET_KEY = 'django-insecure-your-secret-key-here-change-in-production'
-
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-default-key-change-this')
 
 
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost').split(',')
+
+
 
 
 INSTALLED_APPS = [
@@ -47,6 +47,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'bitu_test.urls'
 
 TEMPLATES = [
@@ -67,11 +68,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bitu_test.wsgi.application'
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / config('DB_NAME', default='db.sqlite3'),
     }
 }
 
@@ -96,8 +96,8 @@ AUTH_PASSWORD_VALIDATION = [
 
 
 
-LANGUAGE_CODE = 'uz'
-TIME_ZONE = 'Asia/Tashkent'
+LANGUAGE_CODE = config('LANGUAGE_CODE', default='uz')
+TIME_ZONE = config('TIME_ZONE', default='Asia/Tashkent')
 USE_I18N = True
 USE_TZ = True
 
@@ -120,3 +120,9 @@ LOGIN_REDIRECT_URL = 'accounts:dashboard'
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_AGE = 1209600  
+
+
+
+ESKIZ_EMAIL = config('ziyomax2020@mail.ru', default='')
+ESKIZ_PASSWORD = config('8Q8YLbMgvIAOjzOFGZtRmkbAfdbXxCEGmJ0lNqNk', default='')
+ESKIZ_NICK = config('4546', default='4546')

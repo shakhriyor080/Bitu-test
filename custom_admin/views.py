@@ -12,13 +12,18 @@ from accounts.models import User, Profile, Direction, SMSVerification
 # Exams modellari
 from exams.models import Question, TestResult, UserAnswer
 
-# ============================================
-# ADMIN LOGIN
-# ============================================
+
+from decouple import config
+
+
+
 def admin_login(request):
     """Admin login sahifasi"""
     if request.user.is_authenticated and (request.user.is_superuser or request.user.is_staff):
         return redirect('custom_admin:dashboard')
+    
+    # .env dan admin ma'lumotlarini olish (agar kerak bo'lsa)
+    admin_phone = config('ADMIN_PHONE', default='')
     
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -35,7 +40,6 @@ def admin_login(request):
             messages.error(request, "Telefon raqam yoki parol xato, yoki siz admin emassiz")
     
     return render(request, 'admin_panel/login.html')
-
 
 def admin_logout(request):
     logout(request)
