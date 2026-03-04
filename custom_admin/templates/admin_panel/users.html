@@ -81,9 +81,9 @@
                     <td>
                         {% with test_count=user.test_results.count %}
                             {% if test_count > 0 %}
-                                <span class="badge badge-info">{{ test_count }} ta</span>
+                                <span class="badge badge-info" style="color: rgb(173, 127, 127);">{{ test_count }} ta</span>
                             {% else %}
-                                <span class="badge badge-secondary">0</span>
+                                <span class="badge badge-secondary" style="color: rgb(173, 127, 127);">0</span>
                             {% endif %}
                         {% endwith %}
                     </td>

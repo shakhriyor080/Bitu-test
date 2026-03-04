@@ -1,2 +1,5 @@
 Django==4.2.7
 python-dotenv==1.0.0
+eskiz_sms
+import_export
+django_extensions

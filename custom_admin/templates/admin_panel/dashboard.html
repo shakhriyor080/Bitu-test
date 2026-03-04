@@ -193,19 +193,22 @@
                             <td><strong>{{ stat.name }}</strong></td>
                             <td>{{ stat.students }}</td>
                             <td>{{ stat.tests }}</td>
+
                             <td>
                                 {% with passed=stat.tests|default:0 %}
                                     <span class="badge badge-success">{{ passed }}</span>
                                 {% endwith %}
                             </td>
+
                             <td>
                                 <div class="progress" style="height: 10px;">
-                                    {% with percent=stat.tests|default:0 %}
-                                    <div class="progress-bar bg-success" style="width: {{ percent }}"></div>
+                                    {% with percent=stat.tests|default:5000 %}
+                                    <div class="progress-bar bg-success" style="width: {{ percent }} ;"  >     </div>
                                     {% endwith %}
                                 </div>
                             </td>
                         </tr>
+
                         {% empty %}
                         <tr>
                             <td colspan="5" class="text-center">Yo'nalishlar yo'q</td>

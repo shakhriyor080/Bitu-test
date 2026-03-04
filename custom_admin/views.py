@@ -66,7 +66,7 @@ def dashboard(request):
     
     # Yo'nalishlar bo'yicha statistika
     direction_stats = []
-    for direction in Direction.objects.filter(is_active=True)[:5]:
+    for direction in Direction.objects.filter(is_active=True)[:]:
         students = Profile.objects.filter(direction=direction).count()
         tests = TestResult.objects.filter(direction=direction, is_completed=True).count()
         direction_stats.append({
