@@ -1,0 +1,92 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Bosh sahifa{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    
+    <div class="row justify-content-center text-center mb-5">
+        <div class="col-md-8">
+            <h1 class="display-4 mb-4">BITU Test tizimiga xush kelibsiz!</h1>
+            <p class="lead mb-4">
+                Buxoro Innovatsion Ta'lim va Tibbiyot Universiteti uchun online test tizimi
+            </p>
+            {% if not user.is_authenticated %}
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-lg px-4 me-sm-3">
+                        Ro'yxatdan o'tish
+                    </a>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary btn-lg px-4">
+                        Kirish
+                    </a>
+                </div>
+            {% else %}
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <a href="{% url 'accounts:dashboard' %}" class="btn btn-primary btn-lg px-4">
+                        Dashboardga o'tish
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+
+
+
+
+    <div class="row g-4 py-5">
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <h5 class="card-title">Online test tizimi</h5>
+                    <p class="card-text">
+                        60 ta savol, har bir savol 1.5 ball. Maksimal 90 ball.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <h5 class="card-title">Natija</h5>
+                    <p class="card-text">
+                        15 balldan past - kira olmadingiz<br>
+                        15 va yuqori - kontrakt asosida qabul qilindingiz
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <h5 class="card-title">Qulay interfeys</h5>
+                    <p class="card-text">
+                        Oddiy va tushunarli interfeys. Mobil qurilmalarga moslashgan.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-4">Qanday ishlaydi?</h5>
+                    <ol class="list-group list-group-numbered">
+                        <li class="list-group-item">Telefon raqam orqali ro'yxatdan o'ting</li>
+                        <li class="list-group-item">SMS kodni tasdiqlang</li>
+                        <li class="list-group-item">Profil ma'lumotlarini to'ldiring</li>
+                        <li class="list-group-item">Testni boshlang (60 daqiqa vaqt)</li>
+                        <li class="list-group-item">Natijani ko'ring</li>
+                        
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,736 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Test topshirish{% endblock %}
+
+{% block content %}
+<style>
+    /* ===== BASE STYLES ===== */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    
+    body {
+        background: #f0f2f5;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .test-container {
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 0 15px;
+    }
+    
+    /* ===== HEADER ===== */
+    .test-header {
+        background: linear-gradient(135deg, #4361ee, #3a0ca3);
+        color: white;
+        border-radius: 15px;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+    
+    .info-item {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 10px 20px;
+        border-radius: 10px;
+        text-align: center;
+        min-width: 120px;
+    }
+    
+    .info-label {
+        font-size: 12px;
+        opacity: 0.9;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .info-value {
+        font-size: 24px;
+        font-weight: bold;
+        font-family: 'Courier New', monospace;
+    }
+    
+    #timer {
+        color: #ffd166;
+        font-size: 28px;
+    }
+    
+    /* ===== QUESTION CARD ===== */
+    .question-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-left: 5px solid #4361ee;
+    }
+    
+    .question-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2b2d42;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #e9ecef;
+    }
+    
+    .question-number-badge {
+        background: #4361ee;
+        color: white;
+        width: 30px;
+        height: 30px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin-right: 10px;
+        font-size: 14px;
+    }
+    
+    /* ===== OPTIONS ===== */
+    .options-container {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .option-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .option-item:hover {
+        background: #e9ecef;
+        border-color: #4361ee;
+        transform: translateX(5px);
+    }
+    
+    .option-item.selected {
+        background: #e7f3ff;
+        border-color: #4361ee;
+    }
+    
+    .option-prefix {
+        width: 35px;
+        height: 35px;
+        background: #4361ee;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 15px;
+    }
+    
+    .option-item.selected .option-prefix {
+        background: #06d6a0;
+    }
+    
+    .option-text {
+        font-size: 16px;
+        color: #2b2d42;
+        flex: 1;
+    }
+    
+    /* ===== NAVIGATION ===== */
+    .navigation {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        padding: 15px 20px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+    
+    .nav-btn {
+        width: 50px;
+        height: 50px;
+        border: none;
+        border-radius: 50%;
+        background: #4361ee;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .nav-btn:hover:not(:disabled) {
+        background: #3a0ca3;
+        transform: scale(1.1);
+    }
+    
+    .nav-btn:disabled {
+        background: #adb5bd;
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+    
+    .answered-badge {
+        background: #06d6a0;
+        color: white;
+        padding: 8px 25px;
+        border-radius: 25px;
+        font-weight: bold;
+        font-size: 18px;
+    }
+    
+    .submit-btn {
+        background: #06d6a0;
+        color: white;
+        border: none;
+        padding: 12px 40px;
+        border-radius: 30px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 5px 15px rgba(6, 214, 160, 0.3);
+    }
+    
+    .submit-btn:hover {
+        background: #05b58b;
+        transform: translateY(-2px);
+    }
+    
+    /* ===== PROGRESS ===== */
+    .progress-container {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: white;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        z-index: 1000;
+    }
+    
+    .progress-text {
+        font-size: 18px;
+        font-weight: bold;
+        color: #4361ee;
+    }
+    
+    /* ===== MODAL ===== */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+    }
+    
+    .modal.active {
+        display: flex;
+    }
+    
+    .modal-content {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        max-width: 400px;
+        text-align: center;
+    }
+    
+    .modal-icon {
+        font-size: 50px;
+        margin-bottom: 20px;
+    }
+    
+    .modal-btn {
+        background: #4361ee;
+        color: white;
+        border: none;
+        padding: 10px 30px;
+        border-radius: 25px;
+        margin-top: 20px;
+        cursor: pointer;
+    }
+    
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+        .test-header {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .info-item {
+            width: 100%;
+        }
+        
+        .info-value {
+            font-size: 20px;
+        }
+        
+        #timer {
+            font-size: 24px;
+        }
+        
+        .question-title {
+            font-size: 16px;
+        }
+        
+        .option-item {
+            padding: 12px 15px;
+        }
+        
+        .option-prefix {
+            width: 30px;
+            height: 30px;
+            font-size: 14px;
+        }
+        
+        .navigation {
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .progress-container {
+            width: 60px;
+            height: 60px;
+            bottom: 15px;
+            right: 15px;
+        }
+    }
+</style>
+
+<div class="test-container">
+    <!-- HEADER -->
+    <div class="test-header">
+        <div class="info-item">
+            <div class="info-label">Savol</div>
+            <div class="info-value" id="current-question">1/60</div>
+        </div>
+        
+        <div class="info-item">
+            <div class="info-label">Qolgan vaqt</div>
+            <div class="info-value" id="timer">60:00</div>
+        </div>
+        
+        <div class="info-item">
+            <div class="info-label">Javoblar</div>
+            <div class="info-value" id="answered-count">0/60</div>
+        </div>
+    </div>
+    
+    <!-- TEST FORM -->
+    <form id="test-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="answers" id="answers-input" value="{}">
+        
+        <!-- SAVOLLAR -->
+        <div id="questions-container">
+            {% for question in questions %}
+            <div class="question-card" id="question-{{ forloop.counter }}" data-id="{{ question.id }}" 
+                 {% if forloop.counter > 1 %}style="display: none;"{% endif %}>
+                <div class="question-title">
+                    <span class="question-number-badge">{{ forloop.counter }}</span>
+                    {{ question.text }}
+                </div>
+                
+                <div class="options-container">
+                    <!-- A -->
+                    <div class="option-item" onclick="selectOption('{{ question.id }}', 'A', this)">
+                        <input type="radio" name="q_{{ question.id }}" value="A" style="display: none;">
+                        <span class="option-prefix">A</span>
+                        <span class="option-text">{{ question.option_a }}</span>
+                    </div>
+                    
+                    <!-- B -->
+                    <div class="option-item" onclick="selectOption('{{ question.id }}', 'B', this)">
+                        <input type="radio" name="q_{{ question.id }}" value="B" style="display: none;">
+                        <span class="option-prefix">B</span>
+                        <span class="option-text">{{ question.option_b }}</span>
+                    </div>
+                    
+                    <!-- C -->
+                    <div class="option-item" onclick="selectOption('{{ question.id }}', 'C', this)">
+                        <input type="radio" name="q_{{ question.id }}" value="C" style="display: none;">
+                        <span class="option-prefix">C</span>
+                        <span class="option-text">{{ question.option_c }}</span>
+                    </div>
+                    
+                    <!-- D -->
+                    <div class="option-item" onclick="selectOption('{{ question.id }}', 'D', this)">
+                        <input type="radio" name="q_{{ question.id }}" value="D" style="display: none;">
+                        <span class="option-prefix">D</span>
+                        <span class="option-text">{{ question.option_d }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- NAVIGATION -->
+        <div class="navigation">
+            <button type="button" class="nav-btn" id="prevBtn" onclick="changeQuestion(-1)" disabled>←</button>
+            
+            <div>
+                <span class="answered-badge" id="submitBtn" style="display: none;" onclick="submitTest()">
+                    ✅ Yakunlash
+                </span>
+                <button type="button" class="nav-btn" id="nextBtn" onclick="changeQuestion(1)">→</button>
+            </div>
+        </div>
+    </form>
+    
+    <!-- PROGRESS -->
+    <div class="progress-container" onclick="scrollToTop()">
+        <span class="progress-text" id="progressPercent">0%</span>
+    </div>
+    
+    <!-- WARNING MODAL -->
+    <div class="modal" id="warningModal">
+        <div class="modal-content">
+            <div class="modal-icon">⏰</div>
+            <h3>Diqqat!</h3>
+            <p>Vaqt tugashiga 5 daqiqa qoldi</p>
+            <button class="modal-btn" onclick="closeModal()">Tushunarli</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// =============================================
+// GLOBAL O'ZGARUVCHILAR
+// =============================================
+let currentPage = 1;
+const totalQuestions = 60;
+let answers = {};
+let timeLeft = 3600; // 60 minut
+let timerInterval;
+let warningShown = false;
+const testId = {{ test_result.id }};
+
+// =============================================
+// SAHIFA YUKLANGANDA
+// =============================================
+document.addEventListener('DOMContentLoaded', function() {
+    // LocalStorage dan ma'lumotlarni olish
+    loadFromStorage();
+    
+    // Javoblarni restore qilish
+    restoreAnswers();
+    
+    // Hisoblagichlarni yangilash
+    updateCounters();
+    
+    // Timerni boshlash
+    startTimer();
+    
+    // Progressni yangilash
+    updateProgress();
+});
+
+// =============================================
+// LOCALSTORAGE DAN MA'LUMOTLARNI OLISH
+// =============================================
+function loadFromStorage() {
+    try {
+        const saved = localStorage.getItem(`test_${testId}`);
+        if (saved) {
+            const data = JSON.parse(saved);
+            
+            // Vaqtni hisoblash
+            if (data.startTime) {
+                const start = new Date(data.startTime).getTime();
+                const now = new Date().getTime();
+                const elapsed = Math.floor((now - start) / 1000);
+                timeLeft = Math.max(0, 3600 - elapsed);
+            }
+            
+            // Javoblarni olish
+            if (data.answers) {
+                answers = data.answers;
+            }
+            
+            // Joriy sahifani olish
+            if (data.currentPage) {
+                currentPage = data.currentPage;
+                showQuestion(currentPage);
+            }
+        } else {
+            // Yangi test boshlash
+            localStorage.setItem(`test_${testId}`, JSON.stringify({
+                startTime: new Date().toISOString(),
+                answers: {},
+                currentPage: 1
+            }));
+        }
+    } catch (e) {
+        console.error('LocalStorage xatosi:', e);
+    }
+}
+
+// =============================================
+// SAVOLNI KO'RSATISH
+// =============================================
+function showQuestion(page) {
+    // Barcha savollarni yashirish
+    for (let i = 1; i <= totalQuestions; i++) {
+        const q = document.getElementById(`question-${i}`);
+        if (q) q.style.display = 'none';
+    }
+    
+    // Tanlangan savolni ko'rsatish
+    const current = document.getElementById(`question-${page}`);
+    if (current) {
+        current.style.display = 'block';
+        document.getElementById('current-question').textContent = `${page}/${totalQuestions}`;
+    }
+    
+    // Tugmalarni yangilash
+    updateButtons();
+}
+
+// =============================================
+// TUGMALARNI YANGILASH
+// =============================================
+function updateButtons() {
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    prevBtn.disabled = (currentPage === 1);
+    
+    if (currentPage === totalQuestions) {
+        nextBtn.style.display = 'none';
+        submitBtn.style.display = 'inline-block';
+    } else {
+        nextBtn.style.display = 'inline-block';
+        submitBtn.style.display = 'none';
+    }
+}
+
+// =============================================
+// SAVOL O'ZGARTIRISH
+// =============================================
+function changeQuestion(direction) {
+    const newPage = currentPage + direction;
+    
+    if (newPage >= 1 && newPage <= totalQuestions) {
+        currentPage = newPage;
+        showQuestion(currentPage);
+        
+        // LocalStorage ga saqlash
+        saveToStorage();
+    }
+}
+
+// =============================================
+// OPTION TANLASH
+// =============================================
+function selectOption(questionId, value, element) {
+    // Selected klassni tozalash
+    const container = element.closest('.question-card');
+    container.querySelectorAll('.option-item').forEach(opt => {
+        opt.classList.remove('selected');
+    });
+    
+    // Yangi optionni belgilash
+    element.classList.add('selected');
+    
+    // Javobni saqlash
+    answers[questionId] = value;
+    
+    // Hisoblagichlarni yangilash
+    updateCounters();
+    updateProgress();
+    
+    // LocalStorage va serverga saqlash
+    saveToStorage();
+    saveToServer();
+}
+
+// =============================================
+// JAVOBLARNI RESTORE QILISH
+// =============================================
+function restoreAnswers() {
+    for (let [qId, answer] of Object.entries(answers)) {
+        const radio = document.querySelector(`input[name="q_${qId}"][value="${answer}"]`);
+        if (radio) {
+            const optionItem = radio.closest('.option-item');
+            if (optionItem) {
+                optionItem.classList.add('selected');
+            }
+        }
+    }
+}
+
+// =============================================
+// HISOBLAGICHLARNI YANGILASH
+// =============================================
+function updateCounters() {
+    const count = Object.keys(answers).length;
+    document.getElementById('answered-count').textContent = `${count}/${totalQuestions}`;
+}
+
+// =============================================
+// PROGRESSNI YANGILASH
+// =============================================
+function updateProgress() {
+    const count = Object.keys(answers).length;
+    const percent = Math.round((count / totalQuestions) * 100);
+    document.getElementById('progressPercent').textContent = percent + '%';
+}
+
+// =============================================
+// LOCALSTORAGE GA SAQLASH
+// =============================================
+function saveToStorage() {
+    try {
+        const data = {
+            startTime: JSON.parse(localStorage.getItem(`test_${testId}`) || '{}').startTime || new Date().toISOString(),
+            answers: answers,
+            currentPage: currentPage
+        };
+        localStorage.setItem(`test_${testId}`, JSON.stringify(data));
+    } catch (e) {
+        console.error('LocalStorage ga saqlashda xatolik:', e);
+    }
+}
+
+// =============================================
+// SERVERGA SAQLASH
+// =============================================
+function saveToServer() {
+    document.getElementById('answers-input').value = JSON.stringify(answers);
+    
+    fetch('{% url "exams:save_progress" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            test_result_id: {{ test_result.id }},
+            answers: answers
+        })
+    }).catch(error => console.error('Serverga saqlashda xatolik:', error));
+}
+
+// =============================================
+// TIMER
+// =============================================
+function startTimer() {
+    timerInterval = setInterval(function() {
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            alert('Vaqt tugadi! Test yakunlanmoqda...');
+            document.getElementById('test-form').submit();
+            return;
+        }
+        
+        // 5 daqiqa qolganda modal
+        if (timeLeft === 300 && !warningShown) {
+            warningShown = true;
+            document.getElementById('warningModal').classList.add('active');
+        }
+        
+        timeLeft--;
+        
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('timer').textContent = 
+            `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        
+        // Vaqtni localStorage ga saqlash
+        saveToStorage();
+    }, 1000);
+}
+
+// =============================================
+// MODAL YOPISH
+// =============================================
+function closeModal() {
+    document.getElementById('warningModal').classList.remove('active');
+}
+
+// =============================================
+// SCROLL TO TOP
+// =============================================
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// =============================================
+// TESTNI YAKUNLASH
+// =============================================
+function submitTest() {
+    const answered = Object.keys(answers).length;
+    if (confirm(`Testni yakunlashni xohlaysizmi?\nJavob berilmagan: ${totalQuestions - answered} ta`)) {
+        clearInterval(timerInterval);
+        localStorage.removeItem(`test_${testId}`);
+        saveToServer();
+        document.getElementById('test-form').submit();
+    }
+}
+
+// =============================================
+// AVTOMATIK SAQLASH
+// =============================================
+setInterval(saveToServer, 30000); // 30 sekundda
+setInterval(saveToStorage, 5000);  // 5 sekundda
+
+// =============================================
+// KLAVIATURA BOSHQARMASI
+// =============================================
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft') {
+        changeQuestion(-1);
+    } else if (e.key === 'ArrowRight') {
+        changeQuestion(1);
+    } else if (e.key >= '1' && e.key <= '4') {
+        const currentQ = document.getElementById(`question-${currentPage}`);
+        if (currentQ) {
+            const options = currentQ.querySelectorAll('.option-item');
+            const idx = parseInt(e.key) - 1;
+            if (options[idx]) {
+                options[idx].click();
+            }
+        }
+    }
+});
+
+// =============================================
+// SAHIFA YOPILGANDA
+// =============================================
+window.addEventListener('beforeunload', function(e) {
+    saveToStorage();
+    saveToServer();
+    e.preventDefault();
+    e.returnValue = '';
+});
+</script>
+{% endblock %} <!-- BU YERDA FAQAT 1 TA endblock -->

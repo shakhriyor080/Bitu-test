@@ -1,0 +1,107 @@
+{% extends 'admin_panel/base_admin.html' %}
+{% load static %}
+
+{% block page_title %}Test natijasi tafsiloti{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h5 class="mb-3">
+                <i class="fas fa-user me-2" style="color: #4361ee;"></i>
+                Foydalanuvchi ma'lumotlari
+            </h5>
+            
+            <p><strong>Telefon:</strong> {{ result.user.phone_number }}</p>
+            {% if result.user.profile %}
+                <p><strong>Ism Familiya:</strong> {{ result.user.profile.first_name }} {{ result.user.profile.last_name }}</p>
+                <p><strong>Yo'nalish:</strong> {{ result.user.profile.direction.name }}</p>
+            {% endif %}
+            
+            <hr>
+            
+            <h5 class="mb-3 mt-3">
+                <i class="fas fa-chart-line me-2" style="color: #4361ee;"></i>
+                Test natijasi
+            </h5>
+            
+            <div class="row text-center">
+                <div class="col-6">
+                    <div class="stat-value" style="font-size: 2rem;">{{ result.score|floatformat:1 }}</div>
+                    <div class="stat-label">Ball</div>
+                </div>
+                <div class="col-6">
+                    <div class="stat-value" style="font-size: 2rem;">{{ result.correct_answers }}</div>
+                    <div class="stat-label">To'g'ri</div>
+                </div>
+            </div>
+            
+            <hr>
+            
+            <p><strong>Natija:</strong> 
+                {% if result.is_passed %}
+                    <span class="badge badge-success">O'tgan</span>
+                {% else %}
+                    <span class="badge badge-danger">O'tmagan</span>
+                {% endif %}
+            </p>
+            <p><strong>Boshlangan:</strong> {{ result.started_at|date:"d.m.Y H:i:s" }}</p>
+            <p><strong>Yakunlangan:</strong> {{ result.completed_at|date:"d.m.Y H:i:s" }}</p>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="stat-card">
+            <h5 class="mb-3">
+                <i class="fas fa-list me-2" style="color: #4361ee;"></i>
+                Javoblar tahlili
+            </h5>
+            
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Savol</th>
+                            <th>Tanlangan javob</th>
+                            <th>To'g'ri javob</th>
+                            <th>Natija</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for answer in answers %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ answer.question.text|truncatechars:50 }}</td>
+                            <td>
+                                <span class="badge" style="background: #6c757d; color: white;">
+                                    {{ answer.selected_answer }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge" style="background: #4361ee; color: white;">
+                                    {{ answer.question.correct_answer }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if answer.is_correct %}
+                                    <i class="fas fa-check-circle" style="color: #06d6a0;"></i>
+                                {% else %}
+                                    <i class="fas fa-times-circle" style="color: #ef476f;"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-12 mt-3">
+        <a href="{% url 'custom_admin:results' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Ortga
+        </a>
+    </div>
+</div>
+{% endblock %}

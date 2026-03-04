@@ -1,0 +1,122 @@
+{% extends 'admin_panel/base_admin.html' %}
+{% load static %}
+
+{% block page_title %}Foydalanuvchi tafsiloti{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="d-flex align-items-center mb-3">
+                <div class="user-avatar me-3" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                    {{ user_obj.phone_number|slice:":1"|upper }}
+                </div>
+                <div>
+                    <h5 class="mb-1">{{ user_obj.phone_number }}</h5>
+                    <p class="text-muted mb-0">
+                        {% if user_obj.is_superuser %}
+                            <span class="badge badge-danger">Super Admin</span>
+                        {% elif user_obj.is_staff %}
+                            <span class="badge badge-info">Admin</span>
+                        {% else %}
+                            <span class="badge badge-secondary">Foydalanuvchi</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            
+            <hr>
+            
+            <div class="mb-3">
+                <small class="text-muted d-block">Ro'yxatdan o'tgan sana</small>
+                <strong>{{ user_obj.date_joined|date:"d.m.Y H:i" }}</strong>
+            </div>
+            
+            <div class="mb-3">
+                <small class="text-muted d-block">Oxirgi kirish</small>
+                <strong>{{ user_obj.last_login|date:"d.m.Y H:i"|default:"Hali kirmagan" }}</strong>
+            </div>
+            
+            <div class="mb-3">
+                <small class="text-muted d-block">Profil holati</small>
+                {% if user_obj.profile_completed %}
+                    <span class="badge badge-success">To'ldirilgan</span>
+                {% else %}
+                    <span class="badge badge-warning">To'ldirilmagan</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        {% if profile %}
+        <div class="stat-card mb-4">
+            <h5 class="mb-3">
+                <i class="fas fa-user me-2" style="color: #4361ee;"></i>
+                Profil ma'lumotlari
+            </h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Ism:</strong> {{ profile.first_name }}</p>
+                    <p><strong>Familiya:</strong> {{ profile.last_name }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Yo'nalish:</strong> {{ profile.direction.name|default:"-" }}</p>
+                    <p><strong>Referal kod:</strong> {{ profile.referral_code|default:"-" }}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="stat-card">
+            <h5 class="mb-3">
+                <i class="fas fa-chart-line me-2" style="color: #4361ee;"></i>
+                Test natijalari ({{ test_results.count }})
+            </h5>
+            
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Sana</th>
+                            <th>Yo'nalish</th>
+                            <th>Ball</th>
+                            <th>To'g'ri</th>
+                            <th>Natija</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in test_results %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ result.completed_at|date:"d.m.Y H:i" }}</td>
+                            <td>{{ result.direction.name|truncatechars:20 }}</td>
+                            <td><strong>{{ result.score|floatformat:1 }}</strong></td>
+                            <td>{{ result.correct_answers }}/{{ result.total_questions }}</td>
+                            <td>
+                                {% if result.is_passed %}
+                                    <span class="badge badge-success">O'tgan</span>
+                                {% else %}
+                                    <span class="badge badge-danger">O'tmagan</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">Test natijalari yo'q</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-12 mt-3">
+        <a href="{% url 'custom_admin:users' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Ortga
+        </a>
+    </div>
+</div>
+{% endblock %}

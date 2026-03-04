@@ -1,0 +1,118 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Mening ma'lumotlarim</h4>
+                </div>
+                <div class="card-body">
+                    {% if profile %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Ism Familiya:</strong> {{ profile.full_name }}</p>
+                                <p><strong>Telefon:</strong> {{ user.phone_number }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Yo'nalish:</strong> {{ profile.direction.name }}</p>
+                                <p><strong>Referal kod:</strong> {{ profile.referral_code }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if latest_result %}
+                <div class="card shadow mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Oxirgi test natijasi</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h5>Ball</h5>
+                                    <p class="h3">{{ latest_result.score|floatformat:1 }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h5>To'g'ri javoblar</h5>
+                                    <p class="h3">{{ latest_result.correct_answers }}/60</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h5>Natija</h5>
+                                    {% if latest_result.is_passed %}
+                                        <span class="badge bg-success">Qabul qilindi</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Qabul qilinmadi</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <h5>Sana</h5>
+                                    <p>{{ latest_result.completed_at|date:"d.m.Y" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Amallar</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% if not latest_result %}
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">Test topshirish</h5>
+                                        <p class="card-text">60 ta savol, 90 ball, 60 daqiqa</p>
+                                        <a href="{% url 'exams:instructions' %}" class="btn btn-primary">
+                                            Testni boshlash
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Natijalarim</h5>
+                                    <p class="card-text">Barcha test natijalarini ko'rish</p>
+                                    <a href="{% url 'accounts:dashboard'%}" class="btn btn-outline-primary">
+                                        Ko'rish
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Profil</h5>
+                                    <p class="card-text">Shaxsiy ma'lumotlarni tahrirlash</p>
+                                    <a href="{% url 'accounts:dashboard'%}" class="btn btn-outline-primary">
+                                        Tahrirlash
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'core/base.html' %}
+
+{% block title %}SMS kodni tasdiqlash{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">SMS kodni tasdiqlash</h4>
+                </div>
+                <div class="card-body">
+                    {% if login %}
+                        <p class="text-muted mb-4">Telefon raqamingizga yuborilgan 6 xonali kodni kiriting</p>
+                    {% else %}
+                        <p class="text-muted mb-4">Ro'yxatdan o'tish uchun telefon raqamingizga yuborilgan 6 xonali kodni kiriting</p>
+                    {% endif %}
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.code.id_for_label }}" class="form-label">
+                                SMS kod
+                            </label>
+                            {{ form.code }}
+                            {% if form.code.errors %}
+                                <div class="text-danger mt-1">
+                                    {{ form.code.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                SMS kod 6 ta raqamdan iborat
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">
+                            Tasdiqlash
+                        </button>
+                    </form>
+                    
+                    <hr>
+                    
+                    <div class="text-center">
+                        <p class="mb-2">Kod kelmadi?</p>
+                        <a href="{% url 'accounts:register' %}" class="btn btn-outline-primary btn-sm">
+                            Qayta ro'yxatdan o'tish
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

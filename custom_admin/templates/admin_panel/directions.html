@@ -1,0 +1,78 @@
+{% extends 'admin_panel/base_admin.html' %}
+{% load static %}
+
+{% block page_title %}Yo'nalishlar{% endblock %}
+
+{% block content %}
+<div class="table-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="mb-0">
+            <i class="fas fa-book me-2" style="color: #4361ee;"></i>
+            Yo'nalishlar ro'yxati
+        </h5>
+        
+        <a href="{% url 'custom_admin:direction_add' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Yangi yo'nalish
+        </a>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nomi</th>
+                    <th>Kod</th>
+                    <th>Talabalar</th>
+                    <th>Savollar</th>
+                    <th>Holati</th>
+                    <th>Qo'shilgan</th>
+                    <th>Amallar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for direction in directions %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><strong>{{ direction.name }}</strong></td>
+                    <td><code>{{ direction.code }}</code></td>
+                    <td>
+                        <span class="badge badge-info" style="color: rgb(189, 111, 111);">{{ direction.students_count }} ta</span>
+                    </td>
+                    <td>
+                        <span class="badge badge-warning">{{ direction.questions_count }} ta</span>
+                    </td>
+                    <td>
+                        {% if direction.is_active %}
+                            <span class="badge badge-success">Aktiv</span>
+                        {% else %}
+                            <span class="badge badge-danger">Noaktiv</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ direction.created_at|date:"d.m.Y" }}</td>
+                    <td>
+                        <a href="{% url 'custom_admin:direction_edit' direction.id %}" class="btn-action" title="Tahrirlash">
+                            <i class="fas fa-edit" style="color: #ffc107;"></i>
+                        </a>
+                        <a href="{% url 'custom_admin:direction_delete' direction.id %}" class="btn-action" title="O'chirish"
+                           onclick="return confirm('Bu yo\'nalishni o\'chirmoqchimisiz?')">
+                            <i class="fas fa-trash" style="color: #ef476f;"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center py-4">
+                        <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Yo'nalishlar yo'q</p>
+                        <a href="{% url 'custom_admin:direction_add' %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus me-2"></i>Yangi qo'shish
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

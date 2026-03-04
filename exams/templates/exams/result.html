@@ -1,0 +1,72 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Test natijasi{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Test natijasi</h4>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <h1 class="display-1">{{ test_result.score|floatformat:1 }}</h1>
+                        <p class="lead">ball (maks: {{ max_score }})</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        {% if test_result.is_passed %}
+                            <div class="alert alert-success">
+                                <h4>✅ Siz kontrakt asosida o'qishga qabul qilindingiz</h4>
+                                <p class="mb-0">Tabriklaymiz! Siz {{ test_result.score }} ball to'pladingiz.</p>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-danger">
+                                <h4>❌ Siz o'qishga kira olmadingiz</h4>
+                                <p class="mb-0">Siz {{ test_result.score }} ball to'pladingiz. O'tish bali: {{ passing_score }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5>To'g'ri javoblar</h5>
+                                    <p class="h3">{{ test_result.correct_answers }}/{{ total_questions }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5>Noto'g'ri javoblar</h5>
+                                    <p class="h3">{{ test_result.total_questions|add:test_result.correct_answers|add:-60 }}/{{ total_questions }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5>Foiz</h5>
+                                    <p class="h3">{{ test_result.score|floatformat:1 }}%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="mt-4">
+                        <a href="{% url 'accounts:dashboard' %}" class="btn btn-primary">
+                            Dashboardga qaytish
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

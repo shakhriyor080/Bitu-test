@@ -1,0 +1,203 @@
+/* Custom styles for BITU Test */
+
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+}
+
+body {
+    background-color: #f8f9fa;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Navigation */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+    font-weight: 600;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(13,110,253,.3);
+}
+
+/* Forms */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
+}
+
+.form-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 5px;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+/* Test page specific */
+.question-card {
+    background-color: white;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.question-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+
+.options .form-check {
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.options .form-check:hover {
+    background-color: #f8f9fa;
+}
+
+.options .form-check-input {
+    margin-top: 0.3rem;
+}
+
+.options .form-check-input:checked + .form-check-label {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+/* Timer */
+#timer {
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 5px 15px;
+    border-radius: 20px;
+    background-color: rgba(255,255,255,0.2);
+}
+
+/* Dashboard */
+.badge {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    border-radius: 20px;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .card-header h4 {
+        font-size: 1.2rem;
+    }
+    
+    #timer {
+        font-size: 1rem;
+    }
+}
+
+/* Loading spinner */
+.spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Progress bar */
+.progress {
+    height: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.progress-bar {
+    background-color: var(--primary-color);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+/* Question counter */
+#question-counter {
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 5px 15px;
+    border-radius: 20px;
+    background-color: rgba(255,255,255,0.2);
+}
+
+/* Navigation buttons */
+.navigation-buttons .btn {
+    min-width: 100px;
+}
+
+.navigation-buttons .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

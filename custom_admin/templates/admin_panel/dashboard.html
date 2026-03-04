@@ -1,0 +1,220 @@
+{% extends 'admin_panel/base_admin.html' %}
+{% load static %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Statistics Cards -->
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-value">{{ total_users }}</div>
+            <div class="stat-label">Jami foydalanuvchilar</div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #06d6a020, #06d6a020); color: #06d6a0;">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <div class="stat-value">{{ total_students }}</div>
+            <div class="stat-label">Profil to'ldirganlar</div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #ef476f20, #ef476f20); color: #ef476f;">
+                <i class="fas fa-book"></i>
+            </div>
+            <div class="stat-value">{{ total_directions }}</div>
+            <div class="stat-label">Yo'nalishlar</div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #ffd16620, #ffd16620); color: #ffd166;">
+                <i class="fas fa-question"></i>
+            </div>
+            <div class="stat-value">{{ total_questions }}</div>
+            <div class="stat-label">Savollar</div>
+        </div>
+    </div>
+    
+    <!-- Test Statistics -->
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-clipboard-check"></i>
+            </div>
+            <div class="stat-value">{{ total_tests }}</div>
+            <div class="stat-label">Jami test topshirganlar     </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #06d6a020, #06d6a020); color: #06d6a0;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-value">{{ passed_tests }}</div>
+            <div class="stat-label">O'tganlar</div>
+            <small class="text-muted">{{ passed_tests|default:0 }} / {{ total_tests|default:1 }} test</small>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: linear-gradient(135deg, #ef476f20, #ef476f20); color: #ef476f;">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <div class="stat-value">{{ failed_tests }}</div>
+            <div class="stat-label">O'tmaganlar</div>
+            <small class="text-muted">{{ failed_tests|default:0 }} / {{ total_tests|default:1 }} test</small>
+        </div>
+    </div>
+    
+    <!-- Recent Users -->
+    <div class="col-md-6">
+        <div class="table-container">
+            <h5 class="mb-3">
+                <i class="fas fa-users me-2" style="color: #4361ee;"></i>
+                Oxirgi foydalanuvchilar
+            </h5>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Telefon</th>
+                            <th>Qo'shilgan sana</th>
+                            <th>Profil</th>
+                            <th>Amallar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in recent_users %}
+                        <tr>
+                            <td>{{ user.phone_number }}</td>
+                            <td>{{ user.date_joined|date:"d.m.Y H:i" }}</td>
+                            <td>
+                                {% if user.profile_completed %}
+                                    <span class="badge badge-success">To'ldirilgan</span>
+                                {% else %}
+                                    <span class="badge badge-warning">To'ldirilmagan</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'custom_admin:user_detail' user.id %}" class="btn-action" title="Ko'rish">
+                                    <i class="fas fa-eye" style="color: #4361ee;"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">Foydalanuvchilar yo'q</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Results -->
+    <div class="col-md-6">
+        <div class="table-container">
+            <h5 class="mb-3">
+                <i class="fas fa-chart-line me-2" style="color: #4361ee;"></i>
+                Oxirgi test natijalari
+            </h5>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Foydalanuvchi</th>
+                            <th>Yo'nalish</th>
+                            <th>Ball</th>
+                            <th>Natija</th>
+                            <th>Sana</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in recent_results %}
+                        <tr>
+                            <td>{{ result.user.phone_number }}</td>
+                            <td>{{ result.direction.name|truncatechars:20 }}</td>
+                            <td><strong>{{ result.score|floatformat:1 }}</strong></td>
+                            <td>
+                                {% if result.is_passed %}
+                                    <span class="badge badge-success">O'tdi</span>
+                                {% else %}
+                                    <span class="badge badge-danger">O'tmadi</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ result.completed_at|date:"d.m.Y" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">Test natijalari yo'q</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Direction Statistics -->
+    <div class="col-md-12">
+        <div class="table-container">
+            <h5 class="mb-3">
+                <i class="fas fa-chart-pie me-2" style="color: #4361ee;"></i>
+                Yo'nalishlar statistikasi
+            </h5>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Yo'nalish</th>
+                            <th>Talabalar soni</th>
+                            <th>Test topshirganlar</th>
+                            <th>O'tganlar</th>
+                            <th>Foiz</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stat in direction_stats %}
+                        <tr>
+                            <td><strong>{{ stat.name }}</strong></td>
+                            <td>{{ stat.students }}</td>
+                            <td>{{ stat.tests }}</td>
+                            <td>
+                                {% with passed=stat.tests|default:0 %}
+                                    <span class="badge badge-success">{{ passed }}</span>
+                                {% endwith %}
+                            </td>
+                            <td>
+                                <div class="progress" style="height: 10px;">
+                                    {% with percent=stat.tests|default:0 %}
+                                    <div class="progress-bar bg-success" style="width: {{ percent }}"></div>
+                                    {% endwith %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">Yo'nalishlar yo'q</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
