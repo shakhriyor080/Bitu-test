@@ -37,6 +37,7 @@ class Question(models.Model):
             'D': self.option_d,
         }
 
+
 class TestResult(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='test_results')
     direction = models.ForeignKey(Direction, on_delete=models.SET_NULL, null=True)
@@ -47,6 +48,9 @@ class TestResult(models.Model):
     is_completed = models.BooleanField(default=False, verbose_name="Yakunlangan")
     started_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(null=True, blank=True)
+    
+    #  YANGI MAYDON: Qayta topshirishga ruxsat
+    can_retake = models.BooleanField(default=False, verbose_name="Qayta topshirishga ruxsat")
     
     class Meta:
         verbose_name = "Test natijasi"
@@ -62,6 +66,11 @@ class TestResult(models.Model):
         self.score = self.correct_answers * 1.5
         self.is_passed = self.score >= 15
         return self.is_passed
+    
+    def can_user_retake(self):
+        """Foydalanuvchi testni qayta topshira oladimi?"""
+        return self.can_retake
+
 
 class UserAnswer(models.Model):
     test_result = models.ForeignKey(TestResult, on_delete=models.CASCADE, related_name='answers')

@@ -422,9 +422,8 @@
 </div>
 
 <script>
-// =============================================
-// GLOBAL O'ZGARUVCHILAR
-// =============================================
+
+
 let currentPage = 1;
 const totalQuestions = 60;
 let answers = {};
@@ -433,9 +432,8 @@ let timerInterval;
 let warningShown = false;
 const testId = {{ test_result.id }};
 
-// =============================================
-// SAHIFA YUKLANGANDA
-// =============================================
+
+
 document.addEventListener('DOMContentLoaded', function() {
     // LocalStorage dan ma'lumotlarni olish
     loadFromStorage();
@@ -453,9 +451,8 @@ document.addEventListener('DOMContentLoaded', function() {
     updateProgress();
 });
 
-// =============================================
-// LOCALSTORAGE DAN MA'LUMOTLARNI OLISH
-// =============================================
+
+
 function loadFromStorage() {
     try {
         const saved = localStorage.getItem(`test_${testId}`);

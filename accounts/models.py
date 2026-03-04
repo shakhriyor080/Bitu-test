@@ -27,7 +27,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     phone_regex = RegexValidator(
         regex=r'^\+?998?\d{9}$',
-        message="Telefon raqam formatda bo'lishi kerak: +998901234567"
+        message="Telefon raqam formatda bo'lishi kerak: +998652205545"
     )
     
     phone_number = models.CharField(max_length=15, unique=True, validators=[phone_regex])
@@ -66,7 +66,7 @@ class SMSVerification(models.Model):
     
     def send_sms(self):
         # Hozircha consolega chiqaramiz
-        print(f"SMS code for {self.phone_number}: {self.code}")
+        print(f"SMS code for ....:)")
         return True
 
 

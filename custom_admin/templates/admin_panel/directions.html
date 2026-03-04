@@ -11,9 +11,7 @@
             Yo'nalishlar ro'yxati
         </h5>
         
-        <a href="{% url 'custom_admin:direction_add' %}" class="btn btn-primary">
-            <i class="fas fa-plus me-2"></i>Yangi yo'nalish
-        </a>
+     
     </div>
     
     <div class="table-responsive">
@@ -51,13 +49,7 @@
                     </td>
                     <td>{{ direction.created_at|date:"d.m.Y" }}</td>
                     <td>
-                        <a href="{% url 'custom_admin:direction_edit' direction.id %}" class="btn-action" title="Tahrirlash">
-                            <i class="fas fa-edit" style="color: #ffc107;"></i>
-                        </a>
-                        <a href="{% url 'custom_admin:direction_delete' direction.id %}" class="btn-action" title="O'chirish"
-                           onclick="return confirm('Bu yo\'nalishni o\'chirmoqchimisiz?')">
-                            <i class="fas fa-trash" style="color: #ef476f;"></i>
-                        </a>
+                    
                     </td>
                 </tr>
                 {% empty %}
@@ -65,9 +57,7 @@
                     <td colspan="8" class="text-center py-4">
                         <i class="fas fa-book fa-3x text-muted mb-3"></i>
                         <p class="text-muted">Yo'nalishlar yo'q</p>
-                        <a href="{% url 'custom_admin:direction_add' %}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-plus me-2"></i>Yangi qo'shish
-                        </a>
+                      
                     </td>
                 </tr>
                 {% endfor %}
