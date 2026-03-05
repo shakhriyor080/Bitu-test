@@ -1,10 +1,16 @@
+# exams/models.py
+
 from django.db import models
 from django.contrib.auth import get_user_model
 from accounts.models import Direction
 
+from accounts.models import Subject
+
 User = get_user_model()
 
+
 class Question(models.Model):
+    # Mavjud maydonlar
     direction = models.ForeignKey(Direction, on_delete=models.CASCADE, related_name='questions', verbose_name="Yo'nalish")
     text = models.TextField(verbose_name="Savol matni")
     option_a = models.CharField(max_length=500, verbose_name="A variant")
@@ -20,6 +26,16 @@ class Question(models.Model):
     is_active = models.BooleanField(default=True, verbose_name="Aktiv")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+  
+    subject = models.ForeignKey(
+        Subject, 
+        on_delete=models.CASCADE, 
+        related_name='questions', 
+        verbose_name="Fan",
+        null=True,  
+        blank=True
+    )
     
     class Meta:
         verbose_name = "Savol"
@@ -48,8 +64,6 @@ class TestResult(models.Model):
     is_completed = models.BooleanField(default=False, verbose_name="Yakunlangan")
     started_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(null=True, blank=True)
-    
-    #  YANGI MAYDON: Qayta topshirishga ruxsat
     can_retake = models.BooleanField(default=False, verbose_name="Qayta topshirishga ruxsat")
     
     class Meta:
@@ -61,15 +75,10 @@ class TestResult(models.Model):
         return f"{self.user.phone_number} - {self.score} ball"
     
     def calculate_result(self):
-        """Natijani hisoblash"""
         self.total_questions = 60
         self.score = self.correct_answers * 1.5
         self.is_passed = self.score >= 15
         return self.is_passed
-    
-    def can_user_retake(self):
-        """Foydalanuvchi testni qayta topshira oladimi?"""
-        return self.can_retake
 
 
 class UserAnswer(models.Model):

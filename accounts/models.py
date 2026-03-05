@@ -1,4 +1,5 @@
-import random
+# accounts/models.py - To'liq fayl
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils import timezone
@@ -23,11 +24,10 @@ class UserManager(BaseUserManager):
         return self.create_user(phone_number, password, **extra_fields)
 
 
-
 class User(AbstractBaseUser, PermissionsMixin):
     phone_regex = RegexValidator(
         regex=r'^\+?998?\d{9}$',
-        message="Telefon raqam formatda bo'lishi kerak: +998652205545"
+        message="Telefon raqam formatda bo'lishi kerak: +998901234567"
     )
     
     phone_number = models.CharField(max_length=15, unique=True, validators=[phone_regex])
@@ -48,7 +48,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.profile_completed
 
 
-
 class SMSVerification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     phone_number = models.CharField(max_length=15)
@@ -60,15 +59,14 @@ class SMSVerification(models.Model):
         return f"{self.phone_number} - {self.code}"
     
     def generate_code(self):
+        import random
         self.code = str(random.randint(100000, 999999))
         self.save()
         return self.code
     
     def send_sms(self):
-        # Hozircha consolega chiqaramiz
-        print(f"SMS code for ....:)")
+        print(f"SMS code for {self.phone_number}: {self.code}")
         return True
-
 
 
 class Direction(models.Model):
@@ -86,6 +84,21 @@ class Direction(models.Model):
     def __str__(self):
         return self.name
 
+
+class Subject(models.Model):
+    """Fanlar modeli"""
+    name = models.CharField(max_length=200, verbose_name="Fan nomi", unique=True)
+    code = models.CharField(max_length=50, verbose_name="Fan kodi", blank=True, null=True)
+    is_active = models.BooleanField(default=True, verbose_name="Aktiv")
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = "Fan"
+        verbose_name_plural = "Fanlar"
+        ordering = ['name']
+    
+    def __str__(self):
+        return self.name
 
 
 class Profile(models.Model):

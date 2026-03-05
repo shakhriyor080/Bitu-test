@@ -5,236 +5,364 @@
 
 {% block content %}
 <style>
-    /* ===== BASE STYLES ===== */
+    /* ===== MODERN TEST STYLES ===== */
+    :root {
+        --primary: #4361ee;
+        --primary-dark: #3a56d4;
+        --secondary: #06d6a0;
+        --danger: #ef476f;
+        --warning: #ffd166;
+        --dark: #2b2d42;
+        --light: #f8f9fa;
+        --gray: #6c757d;
+    }
+    
     * {
-        box-sizing: border-box;
         margin: 0;
         padding: 0;
+        box-sizing: border-box;
     }
     
     body {
-        background: #f0f2f5;
+        background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
     }
     
-    .test-container {
-        max-width: 1000px;
+    .test-wrapper {
+        max-width: 1200px;
         margin: 20px auto;
         padding: 0 15px;
     }
     
     /* ===== HEADER ===== */
     .test-header {
-        background: linear-gradient(135deg, #4361ee, #3a0ca3);
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
         color: white;
-        border-radius: 15px;
-        padding: 15px 20px;
-        margin-bottom: 20px;
+        border-radius: 20px;
+        padding: 20px 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(67, 97, 238, 0.3);
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
         gap: 15px;
-        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        position: sticky;
+        top: 10px;
+        z-index: 100;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
     }
     
-    .info-item {
-        background: rgba(255, 255, 255, 0.15);
-        padding: 10px 20px;
-        border-radius: 10px;
+    .header-item {
+        background: rgba(255,255,255,0.15);
+        border-radius: 50px;
+        padding: 10px 25px;
         text-align: center;
-        min-width: 120px;
+        min-width: 150px;
+        border: 2px solid rgba(255,255,255,0.3);
     }
     
-    .info-label {
+    .header-label {
         font-size: 12px;
-        opacity: 0.9;
-        margin-bottom: 5px;
         text-transform: uppercase;
         letter-spacing: 1px;
+        opacity: 0.9;
+        margin-bottom: 5px;
     }
     
-    .info-value {
-        font-size: 24px;
-        font-weight: bold;
+    .header-value {
+        font-size: 28px;
+        font-weight: 700;
         font-family: 'Courier New', monospace;
+        line-height: 1.2;
     }
     
     #timer {
-        color: #ffd166;
-        font-size: 28px;
+        color: var(--warning);
+        font-size: 32px;
+    }
+    
+    /* ===== SUBJECT BADGE ===== */
+    .subject-badge {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        border-radius: 50px;
+        padding: 12px 25px;
+        margin-bottom: 20px;
+        display: inline-block;
+        box-shadow: 0 5px 15px rgba(245, 87, 108, 0.3);
+        font-weight: 600;
+        font-size: 1.1rem;
     }
     
     /* ===== QUESTION CARD ===== */
     .question-card {
         background: white;
-        border-radius: 15px;
-        padding: 25px;
-        margin-bottom: 20px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        border-left: 5px solid #4361ee;
+        border-radius: 30px;
+        padding: 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation: slideIn 0.5s ease;
     }
     
-    .question-title {
-        font-size: 18px;
-        font-weight: 600;
-        color: #2b2d42;
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .question-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 20px;
         padding-bottom: 15px;
         border-bottom: 2px solid #e9ecef;
     }
     
-    .question-number-badge {
-        background: #4361ee;
+    .subject-info {
+        background: var(--primary);
         color: white;
-        width: 30px;
-        height: 30px;
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 0.95rem;
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        margin-right: 10px;
-        font-size: 14px;
+        gap: 8px;
+    }
+    
+    .question-number {
+        background: var(--secondary);
+        color: white;
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .question-text {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 30px;
+        line-height: 1.6;
+        padding: 0 5px;
     }
     
     /* ===== OPTIONS ===== */
-    .options-container {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
+    .options-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+    }
+    
+    @media (max-width: 768px) {
+        .options-grid {
+            grid-template-columns: 1fr;
+        }
     }
     
     .option-item {
+        background: var(--light);
+        border: 2px solid #e9ecef;
+        border-radius: 20px;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
         display: flex;
         align-items: center;
-        padding: 15px 20px;
-        background: #f8f9fa;
-        border: 2px solid #e9ecef;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: all 0.2s ease;
+        gap: 15px;
+        position: relative;
+        overflow: hidden;
     }
     
     .option-item:hover {
-        background: #e9ecef;
-        border-color: #4361ee;
-        transform: translateX(5px);
+        border-color: var(--primary);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(67, 97, 238, 0.1);
     }
     
     .option-item.selected {
-        background: #e7f3ff;
-        border-color: #4361ee;
+        background: linear-gradient(135deg, rgba(67, 97, 238, 0.05), rgba(67, 97, 238, 0.1));
+        border-color: var(--primary);
+        box-shadow: 0 10px 20px rgba(67, 97, 238, 0.2);
+    }
+    
+    .option-item.selected::after {
+        content: '✓';
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary);
+        font-size: 1.5rem;
+        font-weight: bold;
     }
     
     .option-prefix {
-        width: 35px;
-        height: 35px;
-        background: #4361ee;
+        width: 45px;
+        height: 45px;
+        background: var(--primary);
         color: white;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: bold;
-        margin-right: 15px;
+        font-weight: 700;
+        font-size: 1.3rem;
+        box-shadow: 0 5px 10px rgba(67, 97, 238, 0.3);
+        flex-shrink: 0;
     }
     
     .option-item.selected .option-prefix {
-        background: #06d6a0;
+        background: var(--secondary);
     }
     
     .option-text {
-        font-size: 16px;
-        color: #2b2d42;
+        font-size: 1.1rem;
+        color: var(--dark);
+        font-weight: 500;
+        line-height: 1.4;
         flex: 1;
     }
     
     /* ===== NAVIGATION ===== */
     .navigation {
+        background: white;
+        border-radius: 30px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-top: 30px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: white;
-        padding: 15px 20px;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        margin-top: 20px;
+        position: sticky;
+        bottom: 20px;
+        z-index: 99;
+        border: 1px solid rgba(0,0,0,0.05);
+        backdrop-filter: blur(10px);
     }
     
     .nav-btn {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
         border: none;
         border-radius: 50%;
-        background: #4361ee;
+        background: var(--primary);
         color: white;
-        font-size: 20px;
+        font-size: 24px;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
         display: flex;
         align-items: center;
         justify-content: center;
+        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
     }
     
     .nav-btn:hover:not(:disabled) {
-        background: #3a0ca3;
-        transform: scale(1.1);
+        background: var(--primary-dark);
+        transform: scale(1.1) translateY(-3px);
+        box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
     }
     
     .nav-btn:disabled {
-        background: #adb5bd;
+        background: #e9ecef;
+        color: #adb5bd;
         cursor: not-allowed;
-        opacity: 0.5;
+        box-shadow: none;
     }
     
-    .answered-badge {
-        background: #06d6a0;
+    .answered-info {
+        background: var(--secondary);
         color: white;
-        padding: 8px 25px;
-        border-radius: 25px;
-        font-weight: bold;
-        font-size: 18px;
-    }
-    
-    .submit-btn {
-        background: #06d6a0;
-        color: white;
-        border: none;
-        padding: 12px 40px;
-        border-radius: 30px;
-        font-size: 18px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s ease;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.2rem;
         box-shadow: 0 5px 15px rgba(6, 214, 160, 0.3);
     }
     
-    .submit-btn:hover {
-        background: #05b58b;
-        transform: translateY(-2px);
+    .submit-btn {
+        background: linear-gradient(135deg, var(--secondary), #05b58b);
+        color: white;
+        border: none;
+        padding: 15px 50px;
+        border-radius: 50px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 25px rgba(6, 214, 160, 0.4);
+        animation: pulse 2s infinite;
     }
     
-    /* ===== PROGRESS ===== */
-    .progress-container {
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(6, 214, 160, 0.7); }
+        70% { box-shadow: 0 0 0 15px rgba(6, 214, 160, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(6, 214, 160, 0); }
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(6, 214, 160, 0.5);
+    }
+    
+    /* ===== PROGRESS RING ===== */
+    .progress-ring {
         position: fixed;
         bottom: 30px;
         right: 30px;
+        width: 90px;
+        height: 90px;
         background: white;
-        width: 80px;
-        height: 80px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         cursor: pointer;
         z-index: 1000;
+        transition: transform 0.3s ease;
+    }
+    
+    .progress-ring:hover {
+        transform: scale(1.1);
+    }
+    
+    .progress-ring svg {
+        position: absolute;
+        transform: rotate(-90deg);
+    }
+    
+    .progress-ring circle {
+        transition: stroke-dashoffset 0.3s;
+        stroke: var(--primary);
+        stroke-width: 4;
+        fill: transparent;
+        r: 38;
+        cx: 45;
+        cy: 45;
     }
     
     .progress-text {
-        font-size: 18px;
+        font-size: 1.3rem;
         font-weight: bold;
-        color: #4361ee;
+        color: var(--primary);
+        z-index: 1;
     }
     
     /* ===== MODAL ===== */
@@ -243,12 +371,13 @@
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
         align-items: center;
         justify-content: center;
-        z-index: 2000;
+        z-index: 9999;
+        backdrop-filter: blur(5px);
     }
     
     .modal.active {
@@ -257,93 +386,117 @@
     
     .modal-content {
         background: white;
-        border-radius: 20px;
-        padding: 30px;
+        border-radius: 30px;
+        padding: 40px;
         max-width: 400px;
         text-align: center;
+        animation: modalPop 0.3s ease;
     }
     
-    .modal-icon {
-        font-size: 50px;
-        margin-bottom: 20px;
+    @keyframes modalPop {
+        from {
+            transform: scale(0.8);
+            opacity: 0;
+        }
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
     }
     
     .modal-btn {
-        background: #4361ee;
+        background: var(--primary);
         color: white;
         border: none;
-        padding: 10px 30px;
-        border-radius: 25px;
+        padding: 12px 40px;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 600;
         margin-top: 20px;
         cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .modal-btn:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
     }
     
     /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
         .test-header {
             flex-direction: column;
-            text-align: center;
+            align-items: stretch;
         }
         
-        .info-item {
-            width: 100%;
+        .header-item {
+            min-width: auto;
         }
         
-        .info-value {
-            font-size: 20px;
-        }
-        
-        #timer {
+        .header-value {
             font-size: 24px;
         }
         
-        .question-title {
-            font-size: 16px;
+        #timer {
+            font-size: 28px;
+        }
+        
+        .question-text {
+            font-size: 1.1rem;
         }
         
         .option-item {
-            padding: 12px 15px;
+            padding: 15px;
         }
         
         .option-prefix {
-            width: 30px;
-            height: 30px;
-            font-size: 14px;
+            width: 35px;
+            height: 35px;
+            font-size: 1.1rem;
         }
         
-        .navigation {
-            flex-wrap: wrap;
-            gap: 10px;
+        .option-text {
+            font-size: 1rem;
         }
         
-        .progress-container {
-            width: 60px;
-            height: 60px;
-            bottom: 15px;
-            right: 15px;
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+        }
+        
+        .progress-ring {
+            width: 70px;
+            height: 70px;
+            bottom: 20px;
+            right: 20px;
+        }
+        
+        .progress-text {
+            font-size: 1rem;
         }
     }
 </style>
 
-<div class="test-container">
+<div class="test-wrapper">
     <!-- HEADER -->
     <div class="test-header">
-        <div class="info-item">
-            <div class="info-label">Savol</div>
-            <div class="info-value" id="current-question">1/60</div>
+        <div class="header-item">
+            <div class="header-label">SAVOL</div>
+            <div class="header-value" id="current-question">1/60</div>
         </div>
         
-        <div class="info-item">
-            <div class="info-label">Qolgan vaqt</div>
-            <div class="info-value" id="timer">60:00</div>
+        <div class="header-item">
+            <div class="header-label">QOLGAN VAQT</div>
+            <div class="header-value" id="timer">60:00</div>
         </div>
         
-        <div class="info-item">
-            <div class="info-label">Javoblar</div>
-            <div class="info-value" id="answered-count">0/60</div>
+        <div class="header-item">
+            <div class="header-label">JAVOBLAR</div>
+            <div class="header-value" id="answered-count">0/60</div>
         </div>
     </div>
-    
+
     <!-- TEST FORM -->
     <form id="test-form" method="post">
         {% csrf_token %}
@@ -352,14 +505,29 @@
         <!-- SAVOLLAR -->
         <div id="questions-container">
             {% for question in questions %}
-            <div class="question-card" id="question-{{ forloop.counter }}" data-id="{{ question.id }}" 
+            <div class="question-card" id="question-{{ forloop.counter }}" data-id="{{ question.id }}"
+                 data-subject="{{ question.subject.name|default:'Umumiy' }}"
                  {% if forloop.counter > 1 %}style="display: none;"{% endif %}>
-                <div class="question-title">
-                    <span class="question-number-badge">{{ forloop.counter }}</span>
-                    {{ question.text }}
+                
+                <!-- Fan nomi va savol tartibi -->
+                <div class="question-header">
+                    <span class="subject-info">
+                        <i class="bi bi-book"></i>
+                        {{ question.subject.name|default:"Umumiy fan" }}
+                    </span>
+                    <span class="question-number">
+                        <i class="bi bi-question-circle"></i>
+                        Savol {{ forloop.counter }}/60
+                    </span>
                 </div>
                 
-                <div class="options-container">
+                <!-- Savol matni -->
+                <div class="question-text">
+                    {{ forloop.counter }}. {{ question.text }}
+                </div>
+                
+                <!-- Variantlar -->
+                <div class="options-grid">
                     <!-- A -->
                     <div class="option-item" onclick="selectOption('{{ question.id }}', 'A', this)">
                         <input type="radio" name="q_{{ question.id }}" value="A" style="display: none;">
@@ -396,17 +564,24 @@
         <div class="navigation">
             <button type="button" class="nav-btn" id="prevBtn" onclick="changeQuestion(-1)" disabled>←</button>
             
-            <div>
-                <span class="answered-badge" id="submitBtn" style="display: none;" onclick="submitTest()">
-                    ✅ Yakunlash
-                </span>
+            <div class="d-flex align-items-center gap-3">
+                <span class="answered-info" id="answered-info">0/60</span>
+                
+                <button type="button" class="submit-btn" id="submitBtn" style="display: none;" onclick="submitTest()">
+                    ✅ TESTNI YAKUNLASH
+                </button>
                 <button type="button" class="nav-btn" id="nextBtn" onclick="changeQuestion(1)">→</button>
             </div>
         </div>
     </form>
     
-    <!-- PROGRESS -->
-    <div class="progress-container" onclick="scrollToTop()">
+    <!-- PROGRESS RING -->
+    <div class="progress-ring" onclick="scrollToTop()">
+        <svg width="90" height="90">
+            <circle r="38" cx="45" cy="45" stroke="#e9ecef" stroke-width="4" fill="transparent"/>
+            <circle class="progress-ring-circle" r="38" cx="45" cy="45" stroke="var(--primary)" 
+                    stroke-width="4" fill="transparent" style="stroke-dasharray: 238.76; stroke-dashoffset: 238.76;"/>
+        </svg>
         <span class="progress-text" id="progressPercent">0%</span>
     </div>
     
@@ -421,24 +596,29 @@
     </div>
 </div>
 
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 <script>
-
-
+// =============================================
+// GLOBAL O'ZGARUVCHILAR
+// =============================================
 let currentPage = 1;
 const totalQuestions = 60;
 let answers = {};
-let timeLeft = 3600; // 60 minut
+let timeLeft = 3600; // 60 minut = 3600 sekund
 let timerInterval;
 let warningShown = false;
 const testId = {{ test_result.id }};
 
-
-
+// Sahifa yuklanganda
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Sahifa yuklandi, testId:', testId);
+    
     // LocalStorage dan ma'lumotlarni olish
     loadFromStorage();
     
-    // Javoblarni restore qilish
+    // Javoblarni UI ga tiklash
     restoreAnswers();
     
     // Hisoblagichlarni yangilash
@@ -449,13 +629,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Progressni yangilash
     updateProgress();
+    
+    // Joriy savolni ko'rsatish
+    showQuestion(currentPage);
 });
 
-
-
+// LocalStorage dan ma'lumotlarni olish
 function loadFromStorage() {
     try {
         const saved = localStorage.getItem(`test_${testId}`);
+        
         if (saved) {
             const data = JSON.parse(saved);
             
@@ -473,106 +656,84 @@ function loadFromStorage() {
             }
             
             // Joriy sahifani olish
-            if (data.currentPage) {
+            if (data.currentPage && data.currentPage <= totalQuestions) {
                 currentPage = data.currentPage;
-                showQuestion(currentPage);
             }
         } else {
             // Yangi test boshlash
-            localStorage.setItem(`test_${testId}`, JSON.stringify({
+            const newData = {
                 startTime: new Date().toISOString(),
                 answers: {},
                 currentPage: 1
-            }));
+            };
+            localStorage.setItem(`test_${testId}`, JSON.stringify(newData));
         }
     } catch (e) {
         console.error('LocalStorage xatosi:', e);
     }
 }
 
-// =============================================
-// SAVOLNI KO'RSATISH
-// =============================================
+// Savolni ko'rsatish
 function showQuestion(page) {
-    // Barcha savollarni yashirish
     for (let i = 1; i <= totalQuestions; i++) {
         const q = document.getElementById(`question-${i}`);
         if (q) q.style.display = 'none';
     }
     
-    // Tanlangan savolni ko'rsatish
     const current = document.getElementById(`question-${page}`);
     if (current) {
         current.style.display = 'block';
         document.getElementById('current-question').textContent = `${page}/${totalQuestions}`;
     }
     
-    // Tugmalarni yangilash
     updateButtons();
 }
 
-// =============================================
-// TUGMALARNI YANGILASH
-// =============================================
+// Tugmalarni yangilash
 function updateButtons() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
     const submitBtn = document.getElementById('submitBtn');
     
-    prevBtn.disabled = (currentPage === 1);
+    if (prevBtn) prevBtn.disabled = (currentPage === 1);
     
     if (currentPage === totalQuestions) {
-        nextBtn.style.display = 'none';
-        submitBtn.style.display = 'inline-block';
+        if (nextBtn) nextBtn.style.display = 'none';
+        if (submitBtn) submitBtn.style.display = 'inline-block';
     } else {
-        nextBtn.style.display = 'inline-block';
-        submitBtn.style.display = 'none';
+        if (nextBtn) nextBtn.style.display = 'inline-block';
+        if (submitBtn) submitBtn.style.display = 'none';
     }
 }
 
-// =============================================
-// SAVOL O'ZGARTIRISH
-// =============================================
+// Savol o'zgartirish
 function changeQuestion(direction) {
     const newPage = currentPage + direction;
     
     if (newPage >= 1 && newPage <= totalQuestions) {
         currentPage = newPage;
         showQuestion(currentPage);
-        
-        // LocalStorage ga saqlash
         saveToStorage();
     }
 }
 
-// =============================================
-// OPTION TANLASH
-// =============================================
+// Option tanlash
 function selectOption(questionId, value, element) {
-    // Selected klassni tozalash
     const container = element.closest('.question-card');
     container.querySelectorAll('.option-item').forEach(opt => {
         opt.classList.remove('selected');
     });
     
-    // Yangi optionni belgilash
     element.classList.add('selected');
-    
-    // Javobni saqlash
     answers[questionId] = value;
     
-    // Hisoblagichlarni yangilash
     updateCounters();
     updateProgress();
-    
-    // LocalStorage va serverga saqlash
     saveToStorage();
     saveToServer();
 }
 
-// =============================================
-// JAVOBLARNI RESTORE QILISH
-// =============================================
+// Javoblarni tiklash
 function restoreAnswers() {
     for (let [qId, answer] of Object.entries(answers)) {
         const radio = document.querySelector(`input[name="q_${qId}"][value="${answer}"]`);
@@ -585,26 +746,36 @@ function restoreAnswers() {
     }
 }
 
-// =============================================
-// HISOBLAGICHLARNI YANGILASH
-// =============================================
+// Hisoblagichlarni yangilash
 function updateCounters() {
     const count = Object.keys(answers).length;
-    document.getElementById('answered-count').textContent = `${count}/${totalQuestions}`;
+    const displayCount = Math.min(count, totalQuestions);
+    
+    document.getElementById('answered-count').textContent = `${displayCount}/${totalQuestions}`;
+    
+    const answeredInfo = document.getElementById('answered-info');
+    if (answeredInfo) {
+        answeredInfo.textContent = `${displayCount}/${totalQuestions}`;
+    }
 }
 
-// =============================================
-// PROGRESSNI YANGILASH
-// =============================================
+// Progressni yangilash
 function updateProgress() {
     const count = Object.keys(answers).length;
-    const percent = Math.round((count / totalQuestions) * 100);
+    const percent = Math.min(100, Math.round((count / totalQuestions) * 100));
+    
     document.getElementById('progressPercent').textContent = percent + '%';
+    
+    const circle = document.querySelector('.progress-ring-circle');
+    if (circle) {
+        const radius = 38;
+        const circumference = 2 * Math.PI * radius;
+        const offset = circumference - (percent / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+    }
 }
 
-// =============================================
-// LOCALSTORAGE GA SAQLASH
-// =============================================
+// LocalStorage ga saqlash
 function saveToStorage() {
     try {
         const data = {
@@ -614,13 +785,11 @@ function saveToStorage() {
         };
         localStorage.setItem(`test_${testId}`, JSON.stringify(data));
     } catch (e) {
-        console.error('LocalStorage ga saqlashda xatolik:', e);
+        console.error('LocalStorage xatosi:', e);
     }
 }
 
-// =============================================
-// SERVERGA SAQLASH
-// =============================================
+// Serverga saqlash
 function saveToServer() {
     document.getElementById('answers-input').value = JSON.stringify(answers);
     
@@ -631,25 +800,22 @@ function saveToServer() {
             'X-CSRFToken': '{{ csrf_token }}'
         },
         body: JSON.stringify({
-            test_result_id: {{ test_result.id }},
+            test_result_id: testId,
             answers: answers
         })
-    }).catch(error => console.error('Serverga saqlashda xatolik:', error));
+    }).catch(error => console.error('Server xatosi:', error));
 }
 
-// =============================================
-// TIMER
-// =============================================
+// Timer
 function startTimer() {
     timerInterval = setInterval(function() {
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
-            alert('Vaqt tugadi! Test yakunlanmoqda...');
+            alert('Vaqt tugadi!');
             document.getElementById('test-form').submit();
             return;
         }
         
-        // 5 daqiqa qolganda modal
         if (timeLeft === 300 && !warningShown) {
             warningShown = true;
             document.getElementById('warningModal').classList.add('active');
@@ -662,31 +828,30 @@ function startTimer() {
         document.getElementById('timer').textContent = 
             `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         
-        // Vaqtni localStorage ga saqlash
-        saveToStorage();
+        if (timeLeft % 30 === 0) saveToStorage();
     }, 1000);
 }
 
-// =============================================
-// MODAL YOPISH
-// =============================================
+// Modal yopish
 function closeModal() {
     document.getElementById('warningModal').classList.remove('active');
 }
 
-// =============================================
-// SCROLL TO TOP
-// =============================================
+// Scroll to top
 function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// =============================================
-// TESTNI YAKUNLASH
-// =============================================
+// Testni yakunlash
 function submitTest() {
     const answered = Object.keys(answers).length;
-    if (confirm(`Testni yakunlashni xohlaysizmi?\nJavob berilmagan: ${totalQuestions - answered} ta`)) {
+    
+    if (answered > totalQuestions) {
+        alert('Xatolik yuz berdi!');
+        return;
+    }
+    
+    if (confirm(`Testni yakunlash?\n✓ Javob: ${answered} ta\n✗ Javobsiz: ${totalQuestions - answered} ta`)) {
         clearInterval(timerInterval);
         localStorage.removeItem(`test_${testId}`);
         saveToServer();
@@ -694,35 +859,34 @@ function submitTest() {
     }
 }
 
-// =============================================
-// AVTOMATIK SAQLASH
-// =============================================
-setInterval(saveToServer, 30000); // 30 sekundda
-setInterval(saveToStorage, 5000);  // 5 sekundda
+// Avtomatik saqlash
+setInterval(saveToStorage, 5000);
+setInterval(saveToServer, 10000);
 
-// =============================================
-// KLAVIATURA BOSHQARMASI
-// =============================================
+// Klaviatura boshqarmasi
 document.addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowLeft') {
+    if (e.key === 'ArrowLeft' && currentPage > 1) {
         changeQuestion(-1);
-    } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+    }
+    if (e.key === 'ArrowRight' && currentPage < totalQuestions) {
         changeQuestion(1);
-    } else if (e.key >= '1' && e.key <= '4') {
+        e.preventDefault();
+    }
+    if (e.key >= '1' && e.key <= '4') {
         const currentQ = document.getElementById(`question-${currentPage}`);
         if (currentQ) {
             const options = currentQ.querySelectorAll('.option-item');
             const idx = parseInt(e.key) - 1;
             if (options[idx]) {
                 options[idx].click();
+                e.preventDefault();
             }
         }
     }
 });
 
-// =============================================
-// SAHIFA YOPILGANDA
-// =============================================
+// Sahifa yopilganda
 window.addEventListener('beforeunload', function(e) {
     saveToStorage();
     saveToServer();
@@ -730,4 +894,6 @@ window.addEventListener('beforeunload', function(e) {
     e.returnValue = '';
 });
 </script>
-{% endblock %} <!-- BU YERDA FAQAT 1 TA endblock -->
+<!-- Bootstrap Icons (qayta yuklanmasligi uchun) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% endblock %}

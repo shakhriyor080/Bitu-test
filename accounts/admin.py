@@ -8,7 +8,9 @@ from import_export.admin import ImportExportModelAdmin, ExportActionModelAdmin
 
 
 
-# Custom User Admin
+
+
+
 class UserAdmin(BaseUserAdmin, ImportExportModelAdmin):
     inlines = []
     list_display = ('phone_number', 'profile_completed', 'is_staff', 'date_joined')
@@ -108,3 +110,17 @@ class UserAnswerAdmin(admin.ModelAdmin):
     def question_short(self, obj):
         return str(obj.question)[:30]
     question_short.short_description = 'Savol'
+
+
+
+
+from .models import Subject
+
+@admin.register(Subject)
+class SubjectAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code', 'is_active', 'created_at')
+    list_filter = ('is_active',)
+    search_fields = ('name', 'code')
+    list_editable = ('is_active',)
+    prepopulated_fields = {'code': ('name',)}
+

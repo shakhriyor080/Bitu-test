@@ -51,7 +51,7 @@ def register(request):
             except Exception as e:
                 print(f"SMS yuborishda xatolik: ")
                 # Xatolik bo'lganda ham kodni ko'rsatish (test uchun)
-                messages.warning(request, f"Test kodi: ")
+                messages.warning(request, f"Test kodi: error ")
             
           
             request.session['verification_phone'] = phone_number

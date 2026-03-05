@@ -1,6 +1,9 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
+{% load exam_extras %}
+
+
 {% block title %}Test qoidalari{% endblock %}
 
 {% block content %}
@@ -184,8 +187,33 @@
             </div>
         </div>
     </div>
+
+
     
-    <!-- Tugmalar -->
+{% if subjects %}
+<div class="alert alert-info mt-3">
+    <h6 class="alert-heading"><i class="bi bi-info-circle me-2"></i>Fanlar bo'yicha taqsimot:</h6>
+    <div class="row mt-2">
+        {% for subject in subjects %}
+        <div class="col-md-3 col-6 mb-2">
+            <span class="badge bg-light text-dark p-2 w-100">
+                {{ subject.name }}: 
+                <strong>
+                    {% for key, value in subject_counts.items %}
+                        {% if key == subject.name %}
+                            {{ value }}
+                        {% endif %}
+                    {% endfor %}
+                </strong>/15
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+    <p class="mb-0 mt-2 small text-muted">Har bir fandan 15 tadan savol beriladi.</p>
+</div>
+{% endif %}
+
+    
     <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
         <a href="{% url 'exams:take_test' %}" class="btn btn-primary btn-lg px-5 py-3" onclick="return confirm('Testni boshlashga ishonchingiz komilmi? Vaqt hisoblan boshlaydi!')">
             <i class="bi bi-play-circle me-2"></i>Testni boshlash

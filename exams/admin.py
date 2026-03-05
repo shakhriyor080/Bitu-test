@@ -5,14 +5,33 @@ from django.shortcuts import redirect, get_object_or_404
 from django.utils.html import format_html
 from .models import Question, TestResult, UserAnswer
 
+from import_export.admin import ImportExportModelAdmin
 
 
-class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('short_text', 'direction', 'correct_answer', 'is_active', 'created_at')
-    list_filter = ('direction', 'is_active', 'correct_answer')
+class QuestionAdmin(ImportExportModelAdmin):
+    list_display = ('short_text', 'direction', 'subject', 'correct_answer', 'is_active', 'created_at')
+    list_filter = ('direction', 'subject', 'is_active', 'correct_answer')
     search_fields = ('text',)
     list_editable = ('is_active',)
     list_per_page = 20
+    
+    fieldsets = (
+        ("Savol ma'lumotlari", {
+            'fields': ('text', 'explanation')
+        }),
+        ("Variantlar", {
+            'fields': ('option_a', 'option_b', 'option_c', 'option_d')
+        }),
+        ("To'g'ri javob", {
+            'fields': ('correct_answer',)
+        }),
+        ("Bog'lanishlar", {
+            'fields': ('direction', 'subject')
+        }),
+        ("Holati", {
+            'fields': ('is_active',)
+        }),
+    )
     
     def short_text(self, obj):
         return obj.text[:50] + '...' if len(obj.text) > 50 else obj.text
@@ -57,10 +76,8 @@ class TestResultAdmin(admin.ModelAdmin):
     def user_phone(self, obj):
         return obj.user.phone_number
     user_phone.short_description = 'Foydalanuvchi'
-    user_phone.admin_order_field = 'user__phone_number'
     
     def action_buttons(self, obj):
-        """Admin panelda maxsus tugmalar"""
         if obj.is_completed:
             if obj.can_retake:
                 return format_html(
@@ -74,7 +91,6 @@ class TestResultAdmin(admin.ModelAdmin):
                 )
         return "Test yakunlanmagan"
     action_buttons.short_description = 'Amallar'
-    action_buttons.allow_tags = True
     
     def get_urls(self):
         urls = super().get_urls()
@@ -86,7 +102,6 @@ class TestResultAdmin(admin.ModelAdmin):
         return custom_urls + urls
     
     def toggle_retake(self, request, result_id):
-        """Qayta topshirish ruxsatini o'zgartirish"""
         test_result = get_object_or_404(TestResult, id=result_id)
         test_result.can_retake = not test_result.can_retake
         test_result.save()
@@ -112,7 +127,7 @@ class TestResultAdmin(admin.ModelAdmin):
         return super().get_queryset(request).select_related('user', 'direction')
 
 
-
+# UserAnswerAdmin klassi
 class UserAnswerAdmin(admin.ModelAdmin):
     list_display = ('test_result', 'question_short', 'selected_answer', 'is_correct')
     list_filter = ('is_correct',)
@@ -124,11 +139,10 @@ class UserAnswerAdmin(admin.ModelAdmin):
     question_short.short_description = 'Savol'
 
 
+
 from django.contrib.admin import site
-from django.contrib.admin.sites import AlreadyRegistered
 
 try:
-    # Agar oldin ro'yxatdan o'tgan bo'lsa, o'chirish
     site.unregister(Question)
 except:
     pass
@@ -143,7 +157,8 @@ try:
 except:
     pass
 
-# Yangidan ro'yxatdan o'tkazish
+
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(TestResult, TestResultAdmin)
 admin.site.register(UserAnswer, UserAnswerAdmin)
+
