@@ -50,6 +50,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'bitu_test.urls'
 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -74,6 +75,7 @@ DATABASES = {
         'NAME': BASE_DIR / config('DB_NAME', default='db.sqlite3'),
     }
 }
+
 
 AUTH_USER_MODEL = 'accounts.User'
 
