@@ -29,7 +29,6 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'custom_admin.apps.CustomAdminConfig',
 
-
     #tashqi app
     'eskiz_sms',
     'import_export',

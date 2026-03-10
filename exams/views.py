@@ -62,7 +62,7 @@ def test_instructions(request):
             total_available += count
         
         if total_available < 60:
-            messages.error(request, f"Test uchun yetarli savollar mavjud emas. Mavjud: {total_available} ta (60 ta kerak)")
+            messages.error(request, f"Test uchun yetarli savollar mavjud emas.")
             return redirect('accounts:dashboard')
             
     except Profile.DoesNotExist:
