@@ -1,0 +1,67 @@
+﻿{% extends 'admin_panel/base_admin.html' %}
+
+{% block page_title %}Test sozlamasi{% endblock %}
+
+{% block content %}
+<div class="form-card">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-1">{{ direction.name }} - Test sozlamasi</h4>
+            <p class="text-muted mb-0">Har bir fan uchun testga tushadigan savollar sonini kiriting</p>
+        </div>
+        <a href="{% url 'custom_admin:directions' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Ortga
+        </a>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>Fan nomi</th>
+                        <th style="width: 180px;">Mavjud savol</th>
+                        <th style="width: 220px;">Testga tushsin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><strong>{{ row.subject.name }}</strong></td>
+                        <td>
+                            <span class="badge bg-info text-dark">{{ row.available }} ta</span>
+                        </td>
+                        <td>
+                            <input
+                                type="number"
+                                min="0"
+                                max="{{ row.available }}"
+                                name="count_{{ row.subject.id }}"
+                                value="{{ row.selected_count }}"
+                                class="form-control"
+                            >
+                            <small class="text-muted">0 bo'lsa bu fan testga kirmaydi</small>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="alert alert-light border d-flex justify-content-between align-items-center mt-3">
+            <span>Joriy sozlangan jami savol:</span>
+            <strong>{{ configured_total }} ta</strong>
+        </div>
+
+        <div class="d-flex justify-content-end mt-3">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save me-1"></i> Saqlash
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

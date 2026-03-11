@@ -1,17 +1,33 @@
-# exams/models.py
+﻿# exams/models.py
 
 from django.db import models
 from django.contrib.auth import get_user_model
-from accounts.models import Direction
-
-from accounts.models import Subject
+from accounts.models import Direction, Subject
 
 User = get_user_model()
 
 
+class DirectionSubjectConfig(models.Model):
+    direction = models.ForeignKey(Direction, on_delete=models.CASCADE, related_name='exam_configs')
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='direction_configs')
+    question_count = models.PositiveIntegerField(default=0, verbose_name="Savollar soni")
+    order = models.PositiveIntegerField(default=0, verbose_name="Tartib")
+    is_active = models.BooleanField(default=True, verbose_name="Aktiv")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Yo'nalish fan sozlamasi"
+        verbose_name_plural = "Yo'nalish fan sozlamalari"
+        unique_together = ('direction', 'subject')
+        ordering = ['order', 'id']
+
+    def __str__(self):
+        return f"{self.direction.name} - {self.subject.name} ({self.question_count})"
+
+
 class Question(models.Model):
-    # Mavjud maydonlar
-    direction = models.ForeignKey(Direction, on_delete=models.CASCADE, related_name='questions', verbose_name="Yo'nalish")
+    direction = models.ForeignKey(Direction, on_delete=models.SET_NULL, related_name='questions', verbose_name="Yo'nalish", null=True, blank=True)
     text = models.TextField(verbose_name="Savol matni")
     option_a = models.CharField(max_length=500, verbose_name="A variant")
     option_b = models.CharField(max_length=500, verbose_name="B variant")
@@ -26,25 +42,23 @@ class Question(models.Model):
     is_active = models.BooleanField(default=True, verbose_name="Aktiv")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
-  
     subject = models.ForeignKey(
-        Subject, 
-        on_delete=models.CASCADE, 
-        related_name='questions', 
+        Subject,
+        on_delete=models.CASCADE,
+        related_name='questions',
         verbose_name="Fan",
-        null=True,  
-        blank=True
+        null=True,
+        blank=True,
     )
-    
+
     class Meta:
         verbose_name = "Savol"
         verbose_name_plural = "Savollar"
         ordering = ['-created_at']
-    
+
     def __str__(self):
         return self.text[:50]
-    
+
     def get_options(self):
         return {
             'A': self.option_a,
@@ -65,19 +79,20 @@ class TestResult(models.Model):
     started_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(null=True, blank=True)
     can_retake = models.BooleanField(default=False, verbose_name="Qayta topshirishga ruxsat")
-    
+
     class Meta:
         verbose_name = "Test natijasi"
         verbose_name_plural = "Test natijalari"
         ordering = ['-completed_at']
-    
+
     def __str__(self):
         return f"{self.user.phone_number} - {self.score} ball"
-    
+
     def calculate_result(self):
-        self.total_questions = 60
         self.score = self.correct_answers * 1.5
         self.is_passed = self.score >= 15
+        if self.total_questions <= 0:
+            self.total_questions = 60
         return self.is_passed
 
 
@@ -86,10 +101,11 @@ class UserAnswer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     selected_answer = models.CharField(max_length=1, choices=[('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D')])
     is_correct = models.BooleanField(default=False)
-    
+
     class Meta:
         verbose_name = "Foydalanuvchi javobi"
         verbose_name_plural = "Foydalanuvchi javoblari"
-    
+
     def __str__(self):
         return f"{self.question.text[:30]} - {self.selected_answer}"
+

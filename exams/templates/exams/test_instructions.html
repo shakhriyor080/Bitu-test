@@ -1,244 +1,100 @@
-{% extends 'core/base.html' %}
+﻿{% extends 'core/base.html' %}
 {% load static %}
-
-{% load exam_extras %}
-
 
 {% block title %}Test qoidalari{% endblock %}
 
 {% block content %}
-<style>
-    .instructions-container {
-        max-width: 800px;
-        margin: 0 auto;
-    }
-    
-    .rule-card {
-        border-radius: 15px;
-        border: none;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        transition: transform 0.3s ease;
-    }
-    
-    .rule-card:hover {
-        transform: translateY(-5px);
-    }
-    
-    .rule-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 15px 15px 0 0 !important;
-        padding: 20px;
-    }
-    
-    .info-badge {
-        background: #e3f2fd;
-        color: #1976d2;
-        padding: 10px 15px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-    }
-    
-    .rule-list {
-        list-style: none;
-        padding: 0;
-    }
-    
-    .rule-list li {
-        padding: 12px 15px;
-        margin-bottom: 10px;
-        background: #f8f9fa;
-        border-radius: 10px;
-        border-left: 4px solid #667eea;
-    }
-    
-    .warning-list {
-        list-style: none;
-        padding: 0;
-    }
-    
-    .warning-list li {
-        padding: 10px 15px;
-        margin-bottom: 8px;
-        background: #fff3cd;
-        border-radius: 8px;
-        color: #856404;
-    }
-    
-    .timer-box {
-        background: #2c3e50;
-        color: white;
-        padding: 20px;
-        border-radius: 15px;
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    
-    .timer-box .display-4 {
-        font-family: monospace;
-        font-size: 3rem;
-    }
-    
-    @media (max-width: 768px) {
-        .timer-box .display-4 {
-            font-size: 2rem;
-        }
-        
-        .rule-header h3 {
-            font-size: 1.5rem;
-        }
-    }
-</style>
-
-<div class="container instructions-container py-4">
-    <!-- Sarlavha -->
+<div class="container py-4" style="max-width: 900px;">
     <div class="text-center mb-4">
-        <h1 class="display-5 fw-bold">📝 Test qoidalari</h1>
-        <p class="lead text-muted">Testni boshlashdan oldin qoidalarni diqqat bilan o'qing</p>
+        <h1 class="display-6 fw-bold">Test qoidalari</h1>
+        <p class="text-muted">Testni boshlashdan oldin qoidalarni diqqat bilan o'qing</p>
     </div>
-    
-    <!-- Asosiy ma'lumotlar -->
-    <div class="timer-box mb-4">
-        <h4>⏱ Test vaqti</h4>
-        <div class="display-4 fw-bold">60:00</div>
-        <p class="mb-0 mt-2">daqiqa</p>
-    </div>
-    
-    <div class="row g-4 mb-4">
+
+    <div class="row g-3 mb-4">
         <div class="col-md-4">
-            <div class="card rule-card text-center p-3">
-                <div class="display-4 mb-2">❓</div>
-                <h5>60 ta savol</h5>
-                <p class="text-muted mb-0">Har bir savol 1.5 ball</p>
+            <div class="card shadow-sm h-100 text-center p-3">
+                <h5 class="mb-1">{{ question_count }} ta savol</h5>
+                <small class="text-muted">Jami savollar soni</small>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card rule-card text-center p-3">
-                <div class="display-4 mb-2">🎯</div>
-                <h5>90 ball</h5>
-                <p class="text-muted mb-0">Maksimal ball</p>
+            <div class="card shadow-sm h-100 text-center p-3">
+                <h5 class="mb-1">{{ max_score }} ball</h5>
+                <small class="text-muted">Maksimal ball</small>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card rule-card text-center p-3">
-                <div class="display-4 mb-2">✅</div>
-                <h5>15 ball</h5>
-                <p class="text-muted mb-0">Eng kam O'tish bali</p>
+            <div class="card shadow-sm h-100 text-center p-3">
+                <h5 class="mb-1">{{ passing_score }} ball</h5>
+                <small class="text-muted">O'tish bali</small>
             </div>
         </div>
     </div>
-    
-    <!-- Yo'nalish ma'lumoti -->
+
     {% if direction %}
-    <div class="info-badge text-center mb-4">
-        <i class="bi bi-book"></i> Sizning yo'nalishingiz: <strong>{{ direction.name }}</strong>
+    <div class="alert alert-info text-center">
+        Sizning yo'nalishingiz: <strong>{{ direction.name }}</strong>
     </div>
     {% endif %}
-    
-    <!-- Qoidalar -->
-    <div class="card rule-card mb-4">
-        <div class="rule-header">
-            <h3 class="mb-0"><i class="bi bi-list-check me-2"></i>Test qoidalari</h3>
-        </div>
-        <div class="card-body p-4">
-            <ul class="rule-list">
-                <li><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>60 ta savol</strong> ga javob berishingiz kerak</li>
-                <li><i class="bi bi-check-circle-fill text-success me-2"></i> Har bir savol uchun <strong>1.5 ball</strong> beriladi</li>
-                <li><i class="bi bi-check-circle-fill text-success me-2"></i> Testni topshirish uchun <strong>60 daqiqa</strong> vaqtingiz bor</li>
-                <li><i class="bi bi-check-circle-fill text-success me-2"></i> Testni <strong>faqat 1 marta</strong> topshirish mumkin</li>
-                <li><i class="bi bi-check-circle-fill text-success me-2"></i> Test davomida sahifani yangilash mumkin (javoblar saqlanadi)</li>
-                <!-- <li><i class="bi bi-check-circle-fill text-success me-2"></i> Vaqt tugashi bilan test <strong>avtomatik yakunlanadi</strong></li> -->
-            </ul>
-        </div>
-    </div>
-    
-    <!-- Muhim eslatmalar -->
-    <div class="card rule-card mb-4 border-warning">
-        <div class="card-header bg-warning text-dark">
-            <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Muhim eslatmalar</h5>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            Fanlar bo'yicha taqsimot
         </div>
         <div class="card-body">
-            <ul class="warning-list">
-                <li><i class="bi bi-exclamation-circle me-2"></i> Testni boshlaganingizdan so'ng vaqt hisoblay boshlaydi</li>
-                <li><i class="bi bi-exclamation-circle me-2"></i> Internet aloqasi uzilsa, javoblaringiz saqlanadi</li>
-                <li><i class="bi bi-exclamation-circle me-2"></i> Testni erta yakunlash mumkin</li>
-                <li><i class="bi bi-exclamation-circle me-2"></i> Barcha savollarga javob berish shart emas</li>
-            </ul>
-        </div>
-    </div>
-    
-    <!-- Natija qoidasi -->
-    <div class="card rule-card mb-5">
-        <div class="card-body p-4">
-            <h5 class="text-center mb-3">📊 Natija qoidasi</h5>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="alert alert-danger text-center">
-                        <h6 class="fw-bold">❌ 15 balldan past</h6>
-                        <p class="mb-0">Siz o'qishga kira olmadingiz</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="alert alert-success text-center">
-                        <h6 class="fw-bold">✅ 15 va yuqori</h6>
-                        <p class="mb-0">Kontrakt asosida qabul qilindingiz</p>
-                    </div>
-                </div>
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Fan</th>                            <th class="text-center">Testga tushadi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for subject in subjects %}
+                        <tr>
+                            <td>{{ subject.name }}</td>                            <td class="text-center"><strong>{{ subject.required }}</strong></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">Fanlar topilmadi</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-
-    
-{% if subjects %}
-<div class="alert alert-info mt-3">
-    <h6 class="alert-heading"><i class="bi bi-info-circle me-2"></i>Fanlar bo'yicha taqsimot:</h6>
-    <div class="row mt-2">
-        {% for subject in subjects %}
-        <div class="col-md-3 col-6 mb-2">
-            <span class="badge bg-light text-dark p-2 w-100">
-                {{ subject.name }}: 
-                <strong>
-                    {% for key, value in subject_counts.items %}
-                        {% if key == subject.name %}
-                            {{ value }}
-                        {% endif %}
-                    {% endfor %}
-                </strong>/15
-            </span>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <ul class="mb-0">
+                <li>Test vaqti: <strong>60 daqiqa</strong></li>
+                <li>Har bir to'g'ri javob: <strong>1.5 ball</strong></li>
+                <li>Test natijasi yakunlangach saqlanadi</li>
+                <li>Test davomida javoblar avtomatik saqlanadi</li>
+            </ul>
         </div>
-        {% endfor %}
     </div>
-    <p class="mb-0 mt-2 small text-muted">Har bir fandan 15 tadan savol beriladi.</p>
-</div>
-{% endif %}
 
-    
     <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
-        <a href="{% url 'exams:take_test' %}" class="btn btn-primary btn-lg px-5 py-3" onclick="return confirm('Testni boshlashga ishonchingiz komilmi? Vaqt hisoblan boshlaydi!')">
-            <i class="bi bi-play-circle me-2"></i>Testni boshlash
+        <a href="{% url 'exams:take_test' %}" class="btn btn-primary btn-lg px-5" onclick="return confirm('Testni boshlashga ishonchingiz komilmi?')">
+            Testni boshlash
         </a>
-        <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary btn-lg px-5 py-3">
-            <i class="bi bi-arrow-left me-2"></i>Ortga qaytish
+        <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline-secondary btn-lg px-5">
+            Ortga
         </a>
     </div>
+
+    {% if can_retake %}
+    <div class="alert alert-warning mt-4" role="alert">
+        Siz testni <strong>qayta topshirish</strong> holatidasiz. Avvalgi natija yangi natija bilan almashtiriladi.
+    </div>
+    {% elif has_completed_test %}
+    <div class="alert alert-info mt-4" role="alert">
+        Siz testni allaqachon topshirgansiz. Qayta topshirish uchun administrator bilan bog'laning.
+    </div>
+    {% endif %}
 </div>
-
-{% if can_retake %}
-<div class="alert alert-warning mt-4" role="alert">
-    <h5 class="alert-heading"><i class="bi bi-exclamation-triangle-fill me-2"></i>Diqqat!</h5>
-    <p>Siz testni <strong>qayta topshirish</strong> ekansiz. Avvalgi test natijangiz o'chiriladi va yangi natija bilan almashtiriladi.</p>
-    <hr>
-    <p class="mb-0">Qayta topshirishga ruxsat berilgan. Omad!</p>
-</div>
-{% elif has_completed_test %}
-<div class="alert alert-info mt-4" role="alert">
-    <i class="bi bi-info-circle-fill me-2"></i>
-    Siz testni allaqachon topshirgansiz. Qayta topshirish uchun administrator bilan bog'lanishingiz kerak.
-</div>
-{% endif %}
-
-
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 {% endblock %}
+
+

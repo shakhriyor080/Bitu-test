@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
@@ -321,7 +321,7 @@
                 <i class="fas fa-users"></i> Foydalanuvchilar
             </a>
             
-            <a href="{% url 'custom_admin:directions' %}" class="menu-item {% if request.resolver_match.url_name == 'directions' %}active{% endif %}">
+            <a href="{% url 'custom_admin:directions' %}" class="menu-item {% if request.resolver_match.url_name == 'directions' or request.resolver_match.url_name == 'direction_settings' %}active{% endif %}">
                 <i class="fas fa-book"></i> Yo'nalishlar
             </a>
 <!--          -->
@@ -332,7 +332,7 @@
                 <i class="fas fa-globe"></i> Saytga o'tish
             </a>
             <a href="https://t.me/shahriyor_developer" class="menu-item" style="font-size: 10px;" target="_blank">
-               Dasturchi / Help / помощь
+               Dasturchi / Help / РїРѕРјРѕС‰СЊ
             </a> 
         </div>
     </div>

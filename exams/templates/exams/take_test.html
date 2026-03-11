@@ -1,899 +1,393 @@
-{% extends 'core/base.html' %}
+﻿{% extends 'core/base.html' %}
 {% load static %}
 
 {% block title %}Test topshirish{% endblock %}
 
 {% block content %}
 <style>
-    /* ===== MODERN TEST STYLES ===== */
     :root {
-        --primary: #4361ee;
-        --primary-dark: #3a56d4;
-        --secondary: #06d6a0;
-        --danger: #ef476f;
-        --warning: #ffd166;
-        --dark: #2b2d42;
-        --light: #f8f9fa;
-        --gray: #6c757d;
+        --primary: #1d3557;
+        --accent: #2a9d8f;
+        --light: #f5f7fb;
+        --text: #223;
+        --border: #d8dee9;
     }
-    
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    
-    body {
-        background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        min-height: 100vh;
-    }
-    
-    .test-wrapper {
-        max-width: 1200px;
+
+    .test-wrap {
+        max-width: 1100px;
         margin: 20px auto;
-        padding: 0 15px;
     }
-    
-    /* ===== HEADER ===== */
+
     .test-header {
-        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-        color: white;
-        border-radius: 20px;
-        padding: 20px 25px;
-        margin-bottom: 25px;
-        box-shadow: 0 10px 30px rgba(67, 97, 238, 0.3);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 15px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 20px;
         position: sticky;
         top: 10px;
-        z-index: 100;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.2);
+        z-index: 20;
     }
-    
-    .header-item {
-        background: rgba(255,255,255,0.15);
-        border-radius: 50px;
-        padding: 10px 25px;
+
+    .stat-box {
+        background: var(--primary);
+        color: #fff;
+        border-radius: 14px;
+        padding: 14px;
         text-align: center;
-        min-width: 150px;
-        border: 2px solid rgba(255,255,255,0.3);
+        box-shadow: 0 8px 20px rgba(29, 53, 87, 0.2);
     }
-    
-    .header-label {
+
+    .stat-label {
         font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        opacity: 0.9;
-        margin-bottom: 5px;
+        opacity: 0.85;
     }
-    
-    .header-value {
-        font-size: 28px;
+
+    .stat-value {
+        font-size: 22px;
         font-weight: 700;
-        font-family: 'Courier New', monospace;
-        line-height: 1.2;
+        margin-top: 4px;
     }
-    
-    #timer {
-        color: var(--warning);
-        font-size: 32px;
-    }
-    
-    /* ===== SUBJECT BADGE ===== */
-    .subject-badge {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        color: white;
-        border-radius: 50px;
-        padding: 12px 25px;
-        margin-bottom: 20px;
-        display: inline-block;
-        box-shadow: 0 5px 15px rgba(245, 87, 108, 0.3);
-        font-weight: 600;
-        font-size: 1.1rem;
-    }
-    
-    /* ===== QUESTION CARD ===== */
-    .question-card {
-        background: white;
-        border-radius: 30px;
-        padding: 30px;
-        margin-bottom: 25px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-        border: 1px solid rgba(0,0,0,0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        animation: slideIn 0.5s ease;
-    }
-    
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    .question-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid #e9ecef;
-    }
-    
-    .subject-info {
-        background: var(--primary);
-        color: white;
-        padding: 8px 20px;
-        border-radius: 30px;
-        font-weight: 600;
-        font-size: 0.95rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .question-number {
-        background: var(--secondary);
-        color: white;
-        padding: 8px 20px;
-        border-radius: 30px;
-        font-weight: 600;
-        font-size: 0.95rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .question-text {
-        font-size: 1.3rem;
-        font-weight: 600;
-        color: var(--dark);
-        margin-bottom: 30px;
-        line-height: 1.6;
-        padding: 0 5px;
-    }
-    
-    /* ===== OPTIONS ===== */
-    .options-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-        margin-top: 20px;
-    }
-    
-    @media (max-width: 768px) {
-        .options-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-    
-    .option-item {
-        background: var(--light);
-        border: 2px solid #e9ecef;
-        border-radius: 20px;
-        padding: 20px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .option-item:hover {
-        border-color: var(--primary);
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(67, 97, 238, 0.1);
-    }
-    
-    .option-item.selected {
-        background: linear-gradient(135deg, rgba(67, 97, 238, 0.05), rgba(67, 97, 238, 0.1));
-        border-color: var(--primary);
-        box-shadow: 0 10px 20px rgba(67, 97, 238, 0.2);
-    }
-    
-    .option-item.selected::after {
-        content: '✓';
-        position: absolute;
-        right: 20px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--primary);
-        font-size: 1.5rem;
-        font-weight: bold;
-    }
-    
-    .option-prefix {
-        width: 45px;
-        height: 45px;
-        background: var(--primary);
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 1.3rem;
-        box-shadow: 0 5px 10px rgba(67, 97, 238, 0.3);
-        flex-shrink: 0;
-    }
-    
-    .option-item.selected .option-prefix {
-        background: var(--secondary);
-    }
-    
-    .option-text {
-        font-size: 1.1rem;
-        color: var(--dark);
-        font-weight: 500;
-        line-height: 1.4;
-        flex: 1;
-    }
-    
-    /* ===== NAVIGATION ===== */
-    .navigation {
-        background: white;
-        border-radius: 30px;
-        padding: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        margin-top: 30px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: sticky;
-        bottom: 20px;
-        z-index: 99;
-        border: 1px solid rgba(0,0,0,0.05);
-        backdrop-filter: blur(10px);
-    }
-    
-    .nav-btn {
-        width: 60px;
-        height: 60px;
-        border: none;
-        border-radius: 50%;
-        background: var(--primary);
-        color: white;
-        font-size: 24px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-    }
-    
-    .nav-btn:hover:not(:disabled) {
-        background: var(--primary-dark);
-        transform: scale(1.1) translateY(-3px);
-        box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
-    }
-    
-    .nav-btn:disabled {
-        background: #e9ecef;
-        color: #adb5bd;
-        cursor: not-allowed;
-        box-shadow: none;
-    }
-    
-    .answered-info {
-        background: var(--secondary);
-        color: white;
-        padding: 12px 30px;
-        border-radius: 50px;
-        font-weight: 600;
-        font-size: 1.2rem;
-        box-shadow: 0 5px 15px rgba(6, 214, 160, 0.3);
-    }
-    
-    .submit-btn {
-        background: linear-gradient(135deg, var(--secondary), #05b58b);
-        color: white;
-        border: none;
-        padding: 15px 50px;
-        border-radius: 50px;
-        font-size: 1.2rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 25px rgba(6, 214, 160, 0.4);
-        animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-        0% { box-shadow: 0 0 0 0 rgba(6, 214, 160, 0.7); }
-        70% { box-shadow: 0 0 0 15px rgba(6, 214, 160, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(6, 214, 160, 0); }
-    }
-    
-    .submit-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 35px rgba(6, 214, 160, 0.5);
-    }
-    
-    /* ===== PROGRESS RING ===== */
-    .progress-ring {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        width: 90px;
-        height: 90px;
-        background: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        cursor: pointer;
-        z-index: 1000;
-        transition: transform 0.3s ease;
-    }
-    
-    .progress-ring:hover {
-        transform: scale(1.1);
-    }
-    
-    .progress-ring svg {
-        position: absolute;
-        transform: rotate(-90deg);
-    }
-    
-    .progress-ring circle {
-        transition: stroke-dashoffset 0.3s;
-        stroke: var(--primary);
-        stroke-width: 4;
-        fill: transparent;
-        r: 38;
-        cx: 45;
-        cy: 45;
-    }
-    
-    .progress-text {
-        font-size: 1.3rem;
-        font-weight: bold;
-        color: var(--primary);
-        z-index: 1;
-    }
-    
-    /* ===== MODAL ===== */
-    .modal {
+
+    .subject-page {
         display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0,0,0,0.5);
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        backdrop-filter: blur(5px);
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
     }
-    
-    .modal.active {
-        display: flex;
+
+    .subject-page.active {
+        display: block;
     }
-    
-    .modal-content {
-        background: white;
-        border-radius: 30px;
-        padding: 40px;
-        max-width: 400px;
-        text-align: center;
-        animation: modalPop 0.3s ease;
+
+    .subject-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 14px;
     }
-    
-    @keyframes modalPop {
-        from {
-            transform: scale(0.8);
-            opacity: 0;
-        }
-        to {
-            transform: scale(1);
-            opacity: 1;
-        }
+
+    .question-card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 12px;
+        background: var(--light);
     }
-    
-    .modal-btn {
-        background: var(--primary);
-        color: white;
-        border: none;
-        padding: 12px 40px;
-        border-radius: 50px;
-        font-size: 1rem;
+
+    .question-text {
         font-weight: 600;
-        margin-top: 20px;
+        color: var(--text);
+        margin-bottom: 10px;
+    }
+
+    .options {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .option {
+        border: 1px solid #cfd8e3;
+        background: #fff;
+        border-radius: 10px;
+        padding: 10px;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
     }
-    
-    .modal-btn:hover {
-        background: var(--primary-dark);
-        transform: translateY(-2px);
+
+    .option:hover {
+        border-color: var(--primary);
     }
-    
-    /* ===== RESPONSIVE ===== */
+
+    .option.selected {
+        border-color: var(--accent);
+        background: #e9faf7;
+    }
+
+    .nav-wrap {
+        margin-top: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        position: sticky;
+        bottom: 12px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px;
+    }
+
+    .btn-main {
+        border: none;
+        border-radius: 10px;
+        padding: 10px 18px;
+        font-weight: 600;
+    }
+
+    .btn-prev,
+    .btn-next {
+        background: var(--primary);
+        color: #fff;
+    }
+
+    .btn-submit {
+        background: var(--accent);
+        color: #fff;
+        display: none;
+    }
+
     @media (max-width: 768px) {
         .test-header {
-            flex-direction: column;
-            align-items: stretch;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
         }
-        
-        .header-item {
-            min-width: auto;
-        }
-        
-        .header-value {
-            font-size: 24px;
-        }
-        
-        #timer {
-            font-size: 28px;
-        }
-        
-        .question-text {
-            font-size: 1.1rem;
-        }
-        
-        .option-item {
-            padding: 15px;
-        }
-        
-        .option-prefix {
-            width: 35px;
-            height: 35px;
-            font-size: 1.1rem;
-        }
-        
-        .option-text {
-            font-size: 1rem;
-        }
-        
-        .nav-btn {
-            width: 50px;
-            height: 50px;
-            font-size: 20px;
-        }
-        
-        .progress-ring {
-            width: 70px;
-            height: 70px;
-            bottom: 20px;
-            right: 20px;
-        }
-        
-        .progress-text {
-            font-size: 1rem;
+
+        .options {
+            grid-template-columns: 1fr;
         }
     }
 </style>
 
-<div class="test-wrapper">
-    <!-- HEADER -->
+<div class="container test-wrap">
     <div class="test-header">
-        <div class="header-item">
-            <div class="header-label">SAVOL</div>
-            <div class="header-value" id="current-question">1/60</div>
+        <div class="stat-box">
+            <div class="stat-label">FAN SAHIFASI</div>
+            <div class="stat-value" id="current-page">1/{{ total_pages }}</div>
         </div>
-        
-        <div class="header-item">
-            <div class="header-label">QOLGAN VAQT</div>
-            <div class="header-value" id="timer">60:00</div>
+        <div class="stat-box">
+            <div class="stat-label">JORIY FAN</div>
+            <div class="stat-value" id="current-subject">-</div>
         </div>
-        
-        <div class="header-item">
-            <div class="header-label">JAVOBLAR</div>
-            <div class="header-value" id="answered-count">0/60</div>
+        <div class="stat-box">
+            <div class="stat-label">QOLGAN VAQT</div>
+            <div class="stat-value" id="timer">60:00</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">JAVOBLAR</div>
+            <div class="stat-value" id="answered-count">0/{{ total_questions }}</div>
         </div>
     </div>
 
-    <!-- TEST FORM -->
     <form id="test-form" method="post">
         {% csrf_token %}
         <input type="hidden" name="answers" id="answers-input" value="{}">
-        
-        <!-- SAVOLLAR -->
-        <div id="questions-container">
-            {% for question in questions %}
-            <div class="question-card" id="question-{{ forloop.counter }}" data-id="{{ question.id }}"
-                 data-subject="{{ question.subject.name|default:'Umumiy' }}"
-                 {% if forloop.counter > 1 %}style="display: none;"{% endif %}>
-                
-                <!-- Fan nomi va savol tartibi -->
-                <div class="question-header">
-                    <span class="subject-info">
-                        <i class="bi bi-book"></i>
-                        {{ question.subject.name|default:"Umumiy fan" }}
-                    </span>
-                    <span class="question-number">
-                        <i class="bi bi-question-circle"></i>
-                        Savol {{ forloop.counter }}/60
-                    </span>
-                </div>
-                
-                <!-- Savol matni -->
-                <div class="question-text">
-                    {{ forloop.counter }}. {{ question.text }}
-                </div>
-                
-                <!-- Variantlar -->
-                <div class="options-grid">
-                    <!-- A -->
-                    <div class="option-item" onclick="selectOption('{{ question.id }}', 'A', this)">
-                        <input type="radio" name="q_{{ question.id }}" value="A" style="display: none;">
-                        <span class="option-prefix">A</span>
-                        <span class="option-text">{{ question.option_a }}</span>
-                    </div>
-                    
-                    <!-- B -->
-                    <div class="option-item" onclick="selectOption('{{ question.id }}', 'B', this)">
-                        <input type="radio" name="q_{{ question.id }}" value="B" style="display: none;">
-                        <span class="option-prefix">B</span>
-                        <span class="option-text">{{ question.option_b }}</span>
-                    </div>
-                    
-                    <!-- C -->
-                    <div class="option-item" onclick="selectOption('{{ question.id }}', 'C', this)">
-                        <input type="radio" name="q_{{ question.id }}" value="C" style="display: none;">
-                        <span class="option-prefix">C</span>
-                        <span class="option-text">{{ question.option_c }}</span>
-                    </div>
-                    
-                    <!-- D -->
-                    <div class="option-item" onclick="selectOption('{{ question.id }}', 'D', this)">
-                        <input type="radio" name="q_{{ question.id }}" value="D" style="display: none;">
-                        <span class="option-prefix">D</span>
-                        <span class="option-text">{{ question.option_d }}</span>
-                    </div>
+
+        {% for page in subject_pages %}
+        <section class="subject-page" id="subject-page-{{ forloop.counter }}" data-subject="{{ page.subject_name }}" {% if forloop.first %}style="display:block"{% endif %}>
+            <h2 class="subject-title">{{ page.subject_name }} ({{ page.questions|length }} ta savol)</h2>
+
+            {% for question in page.questions %}
+            <div class="question-card" data-question-id="{{ question.id }}">
+                <div class="question-text">{{ question.question_index }}. {{ question.text }}</div>
+                <div class="options">
+                    {% for option in question.shuffled_options %}
+                    <button type="button" class="option" data-answer="{{ option.display_key }}" onclick="selectOption('{{ question.id }}','{{ option.display_key }}',this)">
+                        {{ option.display_key }}) {{ option.text }}
+                    </button>
+                    {% endfor %}
                 </div>
             </div>
             {% endfor %}
-        </div>
-        
-        <!-- NAVIGATION -->
-        <div class="navigation">
-            <button type="button" class="nav-btn" id="prevBtn" onclick="changeQuestion(-1)" disabled>←</button>
-            
-            <div class="d-flex align-items-center gap-3">
-                <span class="answered-info" id="answered-info">0/60</span>
-                
-                <button type="button" class="submit-btn" id="submitBtn" style="display: none;" onclick="submitTest()">
-                    ✅ TESTNI YAKUNLASH
-                </button>
-                <button type="button" class="nav-btn" id="nextBtn" onclick="changeQuestion(1)">→</button>
-            </div>
+        </section>
+        {% endfor %}
+
+        <div class="nav-wrap">
+            <button type="button" id="prevBtn" class="btn-main btn-prev" onclick="changePage(-1)">Oldingi fan</button>
+            <div id="progressText">0/{{ total_questions }}</div>
+            <button type="button" id="nextBtn" class="btn-main btn-next" onclick="changePage(1)">Keyingi fan</button>
+            <button type="button" id="submitBtn" class="btn-main btn-submit" onclick="submitTest()">Testni yakunlash</button>
         </div>
     </form>
-    
-    <!-- PROGRESS RING -->
-    <div class="progress-ring" onclick="scrollToTop()">
-        <svg width="90" height="90">
-            <circle r="38" cx="45" cy="45" stroke="#e9ecef" stroke-width="4" fill="transparent"/>
-            <circle class="progress-ring-circle" r="38" cx="45" cy="45" stroke="var(--primary)" 
-                    stroke-width="4" fill="transparent" style="stroke-dasharray: 238.76; stroke-dashoffset: 238.76;"/>
-        </svg>
-        <span class="progress-text" id="progressPercent">0%</span>
-    </div>
-    
-    <!-- WARNING MODAL -->
-    <div class="modal" id="warningModal">
-        <div class="modal-content">
-            <div class="modal-icon">⏰</div>
-            <h3>Diqqat!</h3>
-            <p>Vaqt tugashiga 5 daqiqa qoldi</p>
-            <button class="modal-btn" onclick="closeModal()">Tushunarli</button>
-        </div>
-    </div>
 </div>
 
-<!-- Bootstrap Icons -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
 <script>
-// =============================================
-// GLOBAL O'ZGARUVCHILAR
-// =============================================
 let currentPage = 1;
-const totalQuestions = 60;
-let answers = {};
-let timeLeft = 3600; // 60 minut = 3600 sekund
-let timerInterval;
-let warningShown = false;
+const totalPages = {{ total_pages }};
+const totalQuestions = {{ total_questions }};
 const testId = {{ test_result.id }};
+const initialAnswers = {{ saved_answers|safe }};
+let answers = initialAnswers || {};
+let timeLeft = 3600;
+let timerInterval = null;
+let warningShown = false;
 
-// Sahifa yuklanganda
+function getCsrfToken() {
+    const input = document.querySelector('input[name="csrfmiddlewaretoken"]');
+    return input ? input.value : '';
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Sahifa yuklandi, testId:', testId);
-    
-    // LocalStorage dan ma'lumotlarni olish
     loadFromStorage();
-    
-    // Javoblarni UI ga tiklash
     restoreAnswers();
-    
-    // Hisoblagichlarni yangilash
     updateCounters();
-    
-    // Timerni boshlash
+    showPage(currentPage);
     startTimer();
-    
-    // Progressni yangilash
-    updateProgress();
-    
-    // Joriy savolni ko'rsatish
-    showQuestion(currentPage);
 });
 
-// LocalStorage dan ma'lumotlarni olish
-function loadFromStorage() {
-    try {
-        const saved = localStorage.getItem(`test_${testId}`);
-        
-        if (saved) {
-            const data = JSON.parse(saved);
-            
-            // Vaqtni hisoblash
-            if (data.startTime) {
-                const start = new Date(data.startTime).getTime();
-                const now = new Date().getTime();
-                const elapsed = Math.floor((now - start) / 1000);
-                timeLeft = Math.max(0, 3600 - elapsed);
-            }
-            
-            // Javoblarni olish
-            if (data.answers) {
-                answers = data.answers;
-            }
-            
-            // Joriy sahifani olish
-            if (data.currentPage && data.currentPage <= totalQuestions) {
-                currentPage = data.currentPage;
-            }
-        } else {
-            // Yangi test boshlash
-            const newData = {
-                startTime: new Date().toISOString(),
-                answers: {},
-                currentPage: 1
-            };
-            localStorage.setItem(`test_${testId}`, JSON.stringify(newData));
-        }
-    } catch (e) {
-        console.error('LocalStorage xatosi:', e);
-    }
-}
-
-// Savolni ko'rsatish
-function showQuestion(page) {
-    for (let i = 1; i <= totalQuestions; i++) {
-        const q = document.getElementById(`question-${i}`);
-        if (q) q.style.display = 'none';
-    }
-    
-    const current = document.getElementById(`question-${page}`);
-    if (current) {
-        current.style.display = 'block';
-        document.getElementById('current-question').textContent = `${page}/${totalQuestions}`;
-    }
-    
-    updateButtons();
-}
-
-// Tugmalarni yangilash
-function updateButtons() {
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const submitBtn = document.getElementById('submitBtn');
-    
-    if (prevBtn) prevBtn.disabled = (currentPage === 1);
-    
-    if (currentPage === totalQuestions) {
-        if (nextBtn) nextBtn.style.display = 'none';
-        if (submitBtn) submitBtn.style.display = 'inline-block';
-    } else {
-        if (nextBtn) nextBtn.style.display = 'inline-block';
-        if (submitBtn) submitBtn.style.display = 'none';
-    }
-}
-
-// Savol o'zgartirish
-function changeQuestion(direction) {
-    const newPage = currentPage + direction;
-    
-    if (newPage >= 1 && newPage <= totalQuestions) {
-        currentPage = newPage;
-        showQuestion(currentPage);
-        saveToStorage();
-    }
-}
-
-// Option tanlash
-function selectOption(questionId, value, element) {
-    const container = element.closest('.question-card');
-    container.querySelectorAll('.option-item').forEach(opt => {
-        opt.classList.remove('selected');
+function showPage(pageNumber) {
+    document.querySelectorAll('.subject-page').forEach((page, idx) => {
+        page.style.display = (idx + 1 === pageNumber) ? 'block' : 'none';
     });
-    
+
+    const active = document.getElementById(`subject-page-${pageNumber}`);
+    document.getElementById('current-page').textContent = `${pageNumber}/${totalPages}`;
+    document.getElementById('current-subject').textContent = active ? active.dataset.subject : '-';
+
+    document.getElementById('prevBtn').disabled = (pageNumber === 1);
+
+    const isLast = (pageNumber === totalPages);
+    document.getElementById('nextBtn').style.display = isLast ? 'none' : 'inline-block';
+    document.getElementById('submitBtn').style.display = isLast ? 'inline-block' : 'none';
+}
+
+function changePage(direction) {
+    const target = currentPage + direction;
+    if (target < 1 || target > totalPages) return;
+
+    currentPage = target;
+    showPage(currentPage);
+    saveToStorage();
+}
+
+function selectOption(questionId, answer, element) {
+    const card = element.closest('.question-card');
+    if (!card) return;
+
+    card.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
     element.classList.add('selected');
-    answers[questionId] = value;
-    
+
+    answers[questionId] = answer;
+
     updateCounters();
-    updateProgress();
     saveToStorage();
     saveToServer();
 }
 
-// Javoblarni tiklash
 function restoreAnswers() {
-    for (let [qId, answer] of Object.entries(answers)) {
-        const radio = document.querySelector(`input[name="q_${qId}"][value="${answer}"]`);
-        if (radio) {
-            const optionItem = radio.closest('.option-item');
-            if (optionItem) {
-                optionItem.classList.add('selected');
-            }
-        }
-    }
+    Object.entries(answers).forEach(([qId, answer]) => {
+        const card = document.querySelector(`.question-card[data-question-id="${qId}"]`);
+        if (!card) return;
+        const option = card.querySelector(`.option[data-answer="${answer}"]`);
+        if (option) option.classList.add('selected');
+    });
 }
 
-// Hisoblagichlarni yangilash
 function updateCounters() {
-    const count = Object.keys(answers).length;
-    const displayCount = Math.min(count, totalQuestions);
-    
-    document.getElementById('answered-count').textContent = `${displayCount}/${totalQuestions}`;
-    
-    const answeredInfo = document.getElementById('answered-info');
-    if (answeredInfo) {
-        answeredInfo.textContent = `${displayCount}/${totalQuestions}`;
+    const answered = Object.keys(answers).length;
+    const text = `${answered}/${totalQuestions}`;
+    document.getElementById('answered-count').textContent = text;
+    document.getElementById('progressText').textContent = text;
+}
+
+function loadFromStorage() {
+    try {
+        const raw = localStorage.getItem(`test_${testId}`);
+        if (!raw) {
+            localStorage.setItem(`test_${testId}`, JSON.stringify({
+                startTime: new Date().toISOString(),
+                currentPage: 1,
+                answers: answers,
+            }));
+            return;
+        }
+
+        const data = JSON.parse(raw);
+
+        if (data.startTime) {
+            const elapsed = Math.floor((Date.now() - new Date(data.startTime).getTime()) / 1000);
+            timeLeft = Math.max(0, 3600 - elapsed);
+        }
+
+        if (data.currentPage && data.currentPage >= 1 && data.currentPage <= totalPages) {
+            currentPage = data.currentPage;
+        }
+
+        if (data.answers && Object.keys(data.answers).length > 0) {
+            answers = data.answers;
+        }
+    } catch (e) {
+        console.error(e);
     }
 }
 
-// Progressni yangilash
-function updateProgress() {
-    const count = Object.keys(answers).length;
-    const percent = Math.min(100, Math.round((count / totalQuestions) * 100));
-    
-    document.getElementById('progressPercent').textContent = percent + '%';
-    
-    const circle = document.querySelector('.progress-ring-circle');
-    if (circle) {
-        const radius = 38;
-        const circumference = 2 * Math.PI * radius;
-        const offset = circumference - (percent / 100) * circumference;
-        circle.style.strokeDashoffset = offset;
-    }
-}
-
-// LocalStorage ga saqlash
 function saveToStorage() {
     try {
-        const data = {
-            startTime: JSON.parse(localStorage.getItem(`test_${testId}`) || '{}').startTime || new Date().toISOString(),
+        const existing = JSON.parse(localStorage.getItem(`test_${testId}`) || '{}');
+        localStorage.setItem(`test_${testId}`, JSON.stringify({
+            startTime: existing.startTime || new Date().toISOString(),
+            currentPage: currentPage,
             answers: answers,
-            currentPage: currentPage
-        };
-        localStorage.setItem(`test_${testId}`, JSON.stringify(data));
+        }));
     } catch (e) {
-        console.error('LocalStorage xatosi:', e);
+        console.error(e);
     }
 }
 
-// Serverga saqlash
 function saveToServer() {
     document.getElementById('answers-input').value = JSON.stringify(answers);
-    
+
     fetch('{% url "exams:save_progress" %}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token }}'
+            'X-CSRFToken': getCsrfToken(),
         },
         body: JSON.stringify({
             test_result_id: testId,
-            answers: answers
-        })
-    }).catch(error => console.error('Server xatosi:', error));
+            answers: answers,
+        }),
+    }).catch(err => console.error(err));
 }
 
-// Timer
 function startTimer() {
     timerInterval = setInterval(function() {
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
-            alert('Vaqt tugadi!');
-            document.getElementById('test-form').submit();
+            submitTest(true);
             return;
         }
-        
+
         if (timeLeft === 300 && !warningShown) {
             warningShown = true;
-            document.getElementById('warningModal').classList.add('active');
+            alert('Diqqat! Vaqt tugashiga 5 daqiqa qoldi.');
         }
-        
-        timeLeft--;
-        
-        const minutes = Math.floor(timeLeft / 60);
-        const seconds = timeLeft % 60;
-        document.getElementById('timer').textContent = 
-            `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        
-        if (timeLeft % 30 === 0) saveToStorage();
+
+        timeLeft -= 1;
+        const m = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+        const s = String(timeLeft % 60).padStart(2, '0');
+        document.getElementById('timer').textContent = `${m}:${s}`;
+
+        if (timeLeft % 30 === 0) {
+            saveToStorage();
+            saveToServer();
+        }
     }, 1000);
 }
 
-// Modal yopish
-function closeModal() {
-    document.getElementById('warningModal').classList.remove('active');
-}
-
-// Scroll to top
-function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// Testni yakunlash
-function submitTest() {
+function submitTest(force = false) {
     const answered = Object.keys(answers).length;
-    
-    if (answered > totalQuestions) {
-        alert('Xatolik yuz berdi!');
-        return;
+
+    if (!force) {
+        const yes = confirm(`Testni yakunlaysizmi?\nJavob berilgan: ${answered}\nJavobsiz: ${totalQuestions - answered}`);
+        if (!yes) return;
     }
-    
-    if (confirm(`Testni yakunlash?\n✓ Javob: ${answered} ta\n✗ Javobsiz: ${totalQuestions - answered} ta`)) {
-        clearInterval(timerInterval);
-        localStorage.removeItem(`test_${testId}`);
-        saveToServer();
-        document.getElementById('test-form').submit();
-    }
+
+    clearInterval(timerInterval);
+    localStorage.removeItem(`test_${testId}`);
+    document.getElementById('answers-input').value = JSON.stringify(answers);
+    document.getElementById('test-form').submit();
 }
 
-// Avtomatik saqlash
 setInterval(saveToStorage, 5000);
 setInterval(saveToServer, 10000);
 
-// Klaviatura boshqarmasi
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowLeft' && currentPage > 1) {
-        changeQuestion(-1);
-        e.preventDefault();
-    }
-    if (e.key === 'ArrowRight' && currentPage < totalQuestions) {
-        changeQuestion(1);
-        e.preventDefault();
-    }
-    if (e.key >= '1' && e.key <= '4') {
-        const currentQ = document.getElementById(`question-${currentPage}`);
-        if (currentQ) {
-            const options = currentQ.querySelectorAll('.option-item');
-            const idx = parseInt(e.key) - 1;
-            if (options[idx]) {
-                options[idx].click();
-                e.preventDefault();
-            }
-        }
-    }
-});
-
-// Sahifa yopilganda
-window.addEventListener('beforeunload', function(e) {
+window.addEventListener('beforeunload', function() {
     saveToStorage();
     saveToServer();
-    e.preventDefault();
-    e.returnValue = '';
 });
 </script>
-<!-- Bootstrap Icons (qayta yuklanmasligi uchun) -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 {% endblock %}
+
+

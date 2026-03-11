@@ -1,4 +1,4 @@
-from django.contrib import admin
+﻿from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User, SMSVerification, Direction, Profile
 from exams.models import Question, TestResult, UserAnswer
@@ -72,8 +72,8 @@ class ProfileAdmin(ImportExportModelAdmin):
 # Exams admin
 @admin.register(Question)
 class QuestionAdmin(ImportExportModelAdmin):
-    list_display = ('short_text', 'direction', 'correct_answer', 'is_active', 'created_at')
-    list_filter = ('direction', 'is_active', 'correct_answer')
+    list_display = ('short_text', 'subject', 'correct_answer', 'is_active', 'created_at')
+    list_filter = ('subject', 'is_active', 'correct_answer')
     search_fields = ('text',)
     list_editable = ('is_active',)
     list_per_page = 20
@@ -123,4 +123,5 @@ class SubjectAdmin(admin.ModelAdmin):
     search_fields = ('name', 'code')
     list_editable = ('is_active',)
     prepopulated_fields = {'code': ('name',)}
+
 

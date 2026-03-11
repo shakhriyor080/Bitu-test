@@ -1,4 +1,4 @@
-import os
+﻿import os
 from pathlib import Path
 from decouple import config
 
@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django_extensions',
     
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -124,6 +125,12 @@ SESSION_COOKIE_AGE = 1209600
 
 
 
-ESKIZ_EMAIL = config('ziyomax2020@mail.ru', default='')
-ESKIZ_PASSWORD = config('8Q8YLbMgvIAOjzOFGZtRmkbAfdbXxCEGmJ0lNqNk', default='')
-ESKIZ_NICK = config('4546', default='4546')
+ESKIZ_EMAIL = config('ESKIZ_EMAIL', default='')
+ESKIZ_PASSWORD = config('ESKIZ_PASSWORD', default='')
+ESKIZ_NICK = config('ESKIZ_NICK', default='4546')
+
+
+
+FIREBASE_CREDENTIALS_PATH = config('FIREBASE_CREDENTIALS_PATH', default='')
+FIREBASE_DATABASE_URL = config('FIREBASE_DATABASE_URL', default='')
+

@@ -1,4 +1,4 @@
-{% extends 'admin_panel/base_admin.html' %}
+﻿{% extends 'admin_panel/base_admin.html' %}
 {% load static %}
 
 {% block page_title %}Yo'nalishlar{% endblock %}
@@ -10,10 +10,8 @@
             <i class="fas fa-book me-2" style="color: #4361ee;"></i>
             Yo'nalishlar ro'yxati
         </h5>
-        
-     
     </div>
-    
+
     <div class="table-responsive">
         <table class="table table-hover">
             <thead>
@@ -22,7 +20,9 @@
                     <th>Nomi</th>
                     <th>Kod</th>
                     <th>Talabalar</th>
-                    <th>Savollar</th>
+                    <th>Aktiv savollar</th>
+                    <th>Sozlangan fanlar</th>
+                    <th>Sozlangan jami</th>
                     <th>Holati</th>
                     <th>Qo'shilgan</th>
                     <th>Amallar</th>
@@ -34,12 +34,10 @@
                     <td>{{ forloop.counter }}</td>
                     <td><strong>{{ direction.name }}</strong></td>
                     <td><code>{{ direction.code }}</code></td>
-                    <td>
-                        <span class="badge badge-info" style="color: rgb(189, 111, 111);">{{ direction.students_count }} ta</span>
-                    </td>
-                    <td>
-                        <span class="badge badge-warning">{{ direction.questions_count }} ta</span>
-                    </td>
+                    <td><span class="badge badge-info" style="color: rgb(189, 111, 111);">{{ direction.students_count }} ta</span></td>
+                    <td><span class="badge badge-warning">{{ direction.questions_count }} ta</span></td>
+                    <td><span class="badge badge-success">{{ direction.configured_subjects }} ta</span></td>
+                    <td><span class="badge badge-warning">{{ direction.configured_total }} ta</span></td>
                     <td>
                         {% if direction.is_active %}
                             <span class="badge badge-success">Aktiv</span>
@@ -49,15 +47,16 @@
                     </td>
                     <td>{{ direction.created_at|date:"d.m.Y" }}</td>
                     <td>
-                    
+                        <a href="{% url 'custom_admin:direction_settings' direction.id %}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-sliders-h me-1"></i> Test sozlamasi
+                        </a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="8" class="text-center py-4">
+                    <td colspan="10" class="text-center py-4">
                         <i class="fas fa-book fa-3x text-muted mb-3"></i>
                         <p class="text-muted">Yo'nalishlar yo'q</p>
-                      
                     </td>
                 </tr>
                 {% endfor %}

@@ -1,4 +1,4 @@
- BUXORO INNOVATSION TA’LIM VA TIBBIYOT UNIVERSITETI
+﻿ BUXORO INNOVATSION TAвЂ™LIM VA TIBBIYOT UNIVERSITETI
 
  Loyiha nomi: BITU-TEST
  Dasturchi: Qosimov Shahriyor
@@ -24,3 +24,17 @@ python manage.py createsuperuser
 
 # 5. Serverni ishga tushirish
 python manage.py runserver
+## Firebase ulash
+
+
+
+
+
+from core.firebase import get_firestore_client, get_realtime_db_ref
+
+
+firestore_db = get_firestore_client()
+firestore_db.collection('tests').document('demo').set({'ok': True})
+
+ref = get_realtime_db_ref('tests/demo')
+ref.set({'ok': True})
