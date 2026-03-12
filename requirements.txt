@@ -9,3 +9,4 @@ django_extensions
 django-import-export
 eskiz-sms
 django-eskiz-sms
+django-cors-headers

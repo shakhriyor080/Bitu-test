@@ -33,11 +33,13 @@ INSTALLED_APPS = [
     'eskiz_sms',
     'import_export',
     'django_extensions',
+    'corsheaders',
     
 ]
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -96,6 +98,8 @@ AUTH_PASSWORD_VALIDATION = [
 ]
 
 
+CORS_ALLOW_ALL_ORIGINS = True 
+CSRF_ALLOW_ALL_ORIGINS = True
 
 
 LANGUAGE_CODE = config('LANGUAGE_CODE', default='uz')
