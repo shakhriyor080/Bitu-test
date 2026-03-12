@@ -30,17 +30,16 @@ class UserAdmin(BaseUserAdmin, ImportExportModelAdmin):
     ordering = ('-date_joined',)
     filter_horizontal = ('groups', 'user_permissions',)
 
-# Profile Inline
 class ProfileInline(admin.StackedInline):
     model = Profile
     can_delete = False
     verbose_name_plural = 'Profil'
     fk_name = 'user'
 
-# Yangi UserAdmin ga ProfileInline qo'shamiz
+
 UserAdmin.inlines = [ProfileInline]
 
-# User modelini registratsiya qilish
+
 admin.site.register(User, UserAdmin)
 
 @admin.register(SMSVerification)

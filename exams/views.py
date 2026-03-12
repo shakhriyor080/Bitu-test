@@ -1,6 +1,4 @@
-﻿# exams/views.py
-
-import json
+﻿import json
 import random
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -96,7 +94,7 @@ def _build_default_pages():
         })
 
     if len(pages) < DEFAULT_PAGE_COUNT:
-        return None, 0, "Standart rejim uchun 15 talik 4 ta blokga yetarli savol yo'q."
+        return None, 0, "Standart rejim uchun savol yetarli emas! "
 
     return pages, DEFAULT_TOTAL_QUESTIONS, None
 
@@ -209,7 +207,7 @@ def test_instructions(request):
             if available < cfg.question_count:
                 messages.error(
                     request,
-                    f"{cfg.subject.name} fanida yetarli savol yo'q: kerak {cfg.question_count}, mavjud {available}.",
+                    f"{cfg.subject.name} fanida yetarli savol yo'q: ",
                 )
                 return redirect('accounts:dashboard')
 
@@ -220,7 +218,7 @@ def test_instructions(request):
         capacity = sum(s['count'] // DEFAULT_BLOCK_SIZE for s in subject_data)
 
         if total_available < DEFAULT_TOTAL_QUESTIONS or capacity < DEFAULT_PAGE_COUNT:
-            messages.error(request, "Testni boshlash uchun jami 60 ta savol va 15 talik 4 ta blok kerak.")
+            messages.error(request, "Testni boshlash uchun savol yetarli emas")
             return redirect('accounts:dashboard')
 
         question_count = DEFAULT_TOTAL_QUESTIONS
