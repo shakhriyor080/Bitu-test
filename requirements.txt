@@ -10,3 +10,4 @@ django-import-export
 eskiz-sms
 django-eskiz-sms
 django-cors-headers
+django-import-export[all]

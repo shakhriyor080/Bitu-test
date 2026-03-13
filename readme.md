@@ -25,16 +25,3 @@ python manage.py createsuperuser
 # 5. Serverni ishga tushirish
 python manage.py runserver
 ## Firebase ulash
-
-
-
-
-
-from core.firebase import get_firestore_client, get_realtime_db_ref
-
-
-firestore_db = get_firestore_client()
-firestore_db.collection('tests').document('demo').set({'ok': True})
-
-ref = get_realtime_db_ref('tests/demo')
-ref.set({'ok': True})
